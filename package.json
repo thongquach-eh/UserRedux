@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ./components",
+    "lint": "eslint ./components ./App.js",
     "flow": "flow",
     "flow-stop": "flow stop"
   },
