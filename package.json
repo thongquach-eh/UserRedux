@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
+    "lint": "eslint ./components ./App.js",
     "flow": "flow",
     "flow-stop": "flow stop"
   },
@@ -38,5 +38,8 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "engines": {
+  "node": "^12"
+}
 }
