@@ -1,3 +1,4 @@
+// @flow
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -6,7 +7,7 @@ import { HomeScreen, UserListScreen } from './components/index';
 
 const Stack = createStackNavigator();
 
-function App() {
+function App() : React.Node {
   return (
     <NavigationContainer>
       <Stack.Navigator>
