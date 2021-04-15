@@ -10,59 +10,45 @@ import {
 import usersData from '../data/users.json';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
+import FullName from './FullName';
+import Location from './Location';
+import BirthDate from './BirthDate';
 
-type UserNameProps = {
-  title: ?string,
-  first: string,
-  last: string,
-};
-
-const renderName = (name: UserNameProps): React.Node => (
-  <Text style={styles.name}>
-    {name.title}. {name.first} {name.last}
-  </Text>
-);
-
-type UserLocationProps = {
-  street: {
-    number: ?number,
-    name: ?string,
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: 'lightblue',
+    padding: 15,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-  city: ?string,
-  state: ?string,
-  country: ?string,
-  postcode: ?string,
-};
-
-const renderLocation = (loc: UserLocationProps): React.Node => (
-  <Text>
-    {loc.street.number} {loc.street.name}, {loc.city} {loc.state},{' '}
-    {loc.postcode}, {loc.country}
-  </Text>
-);
-
-type UserDobProps = {
-  date: ?string,
-  age: ?number,
-};
-
-const renderDob = (dob: UserDobProps): React.Node => (
-  <Text>
-    {dob.date &&
-      new Date(dob.date).toLocaleDateString('default', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })}
-  </Text>
-);
+  avatar: {
+    width: 72,
+    height: 72,
+  },
+});
 
 type UserProps = {
   gender: ?string,
-  name: UserNameProps,
-  location: UserLocationProps,
+  name: {
+    title: ?string,
+    first: string,
+    last: string,
+  },
+  location: {
+    street: {
+      number: ?number,
+      name: ?string,
+    },
+    city: ?string,
+    state: ?string,
+    country: ?string,
+    postcode: ?string,
+  },
   email: string,
-  dob: UserDobProps,
+  dob: {
+    date: ?string,
+    age: ?number,
+  },
   phone: ?string,
   cell: ?string,
   picture: {
@@ -81,28 +67,23 @@ const renderUser = (user: UserProps): React.Node => (
           uri: user.picture.medium,
         }}
       />
-      {renderName(user.name)}
-      {renderLocation(user.location)}
-      {renderDob(user.dob)}
+      <FullName
+        title={user.name.title}
+        first={user.name.first}
+        last={user.name.last}
+      />
+      <Location
+        streetName={user.location.street.name}
+        streetNum={user.location.street.number}
+        city={user.location.city}
+        state={user.location.state}
+        postcode={user.location.postcode}
+        country={user.location.country}
+      />
+      {user.dob.date && <BirthDate date={user.dob.date} />}
     </>
   </TouchableHighlight>
 );
-
-const styles = StyleSheet.create({
-  item: {
-    backgroundColor: 'lightblue',
-    padding: 15,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  name: {
-    fontSize: 20,
-  },
-  avatar: {
-    width: 72,
-    height: 72,
-  },
-});
 
 type UserListScreenProps = {
   navigation: StackNavigationProp<any, any>,
