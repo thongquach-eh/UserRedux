@@ -1,0 +1,17 @@
+name: Linter
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - '*'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - run: yarn install
+      - run: yarn lint

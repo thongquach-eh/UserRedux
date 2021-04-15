@@ -1,173 +1,173 @@
 [
-    {
-      "gender": "male",
-      "name": {
-        "title": "Mr",
-        "first": "Emre",
-        "last": "Abacı"
-      },
-      "location": {
-        "street": {
-          "number": 7028,
-          "name": "Vatan Cd"
-        },
-        "city": "Hatay",
-        "state": "Elazığ",
-        "country": "Turkey",
-        "postcode": 34478
-      },
-      "email": "emre.abaci@example.com",
-      "dob": {
-        "date": "1947-06-30T21:13:54.078Z",
-        "age": 74
-      },
-      "phone": "(439)-741-1246",
-      "cell": "(626)-097-5896",
-      "picture": {
-        "large": "https://randomuser.me/api/portraits/men/39.jpg",
-        "medium": "https://randomuser.me/api/portraits/med/men/39.jpg",
-        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/39.jpg"
-      }
+  {
+    "gender": "male",
+    "name": {
+      "title": "Mr",
+      "first": "Emre",
+      "last": "Abacı"
     },
-    {
-      "gender": "female",
-      "name": {
-        "title": "Ms",
-        "first": "Mércia",
-        "last": "da Cruz"
+    "location": {
+      "street": {
+        "number": 7028,
+        "name": "Vatan Cd"
       },
-      "location": {
-        "street": {
-          "number": 1075,
-          "name": "Avenida D. Pedro Ii"
-        },
-        "city": "Botucatu",
-        "state": "Sergipe",
-        "country": "Brazil",
-        "postcode": 35250
-      },
-      "email": "mercia.dacruz@example.com",
-      "dob": {
-        "date": "1975-06-29T23:00:50.339Z",
-        "age": 46
-      },
-      "phone": "(77) 6581-3802",
-      "cell": "(92) 8180-3442",
-      "id": {
-        "name": "",
-        "value": null
-      },
-      "picture": {
-        "large": "https://randomuser.me/api/portraits/women/30.jpg",
-        "medium": "https://randomuser.me/api/portraits/med/women/30.jpg",
-        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/30.jpg"
-      }
+      "city": "Hatay",
+      "state": "Elazığ",
+      "country": "Turkey",
+      "postcode": 34478
     },
-    {
-      "gender": "male",
-      "name": {
-        "title": "Mr",
-        "first": "Rene",
-        "last": "Bradley"
-      },
-      "location": {
-        "street": {
-          "number": 1997,
-          "name": "Station Road"
-        },
-        "city": "Kingston upon Hull",
-        "state": "West Sussex",
-        "country": "United Kingdom",
-        "postcode": "R7N 7XN"
-      },
-      "email": "rene.bradley@example.com",
-      "dob": {
-        "date": "1979-02-09T05:52:04.972Z",
-        "age": 42
-      },
-      "phone": "017687 29668",
-      "cell": "0759-062-723",
-      "id": {
-        "name": "NINO",
-        "value": "RC 57 50 86 P"
-      },
-      "picture": {
-        "large": "https://randomuser.me/api/portraits/men/25.jpg",
-        "medium": "https://randomuser.me/api/portraits/med/men/25.jpg",
-        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/25.jpg"
-      }
+    "email": "emre.abaci@example.com",
+    "dob": {
+      "date": "1947-06-30T21:13:54.078Z",
+      "age": 74
     },
-    {
-      "gender": "male",
-      "name": {
-        "title": "Mr",
-        "first": "Luca",
-        "last": "Morel"
-      },
-      "location": {
-        "street": {
-          "number": 4834,
-          "name": "Place Paul-Duquaire"
-        },
-        "city": "Nice",
-        "state": "Aube",
-        "country": "France",
-        "postcode": 82631
-      },
-      "email": "luca.morel@example.com",
-      "dob": {
-        "date": "1953-08-02T15:00:02.422Z",
-        "age": 68
-      },
-      "phone": "04-40-99-65-67",
-      "cell": "06-74-54-66-62",
-      "id": {
-        "name": "INSEE",
-        "value": "1NNaN47536989 75"
-      },
-      "picture": {
-        "large": "https://randomuser.me/api/portraits/men/59.jpg",
-        "medium": "https://randomuser.me/api/portraits/med/men/59.jpg",
-        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/59.jpg"
-      }
-    },
-    {
-      "gender": "male",
-      "name": {
-        "title": "Mr",
-        "first": "Nicholas",
-        "last": "Brewer"
-      },
-      "location": {
-        "street": {
-          "number": 9734,
-          "name": "The Grove"
-        },
-        "city": "Kilcoole",
-        "state": "South Dublin",
-        "country": "Ireland",
-        "postcode": 98571
-      },
-      "email": "nicholas.brewer@example.com",
-   
-      "dob": {
-        "date": "1965-06-04T15:03:46.446Z",
-        "age": 56
-      },
-      "registered": {
-        "date": "2013-01-28T22:52:57.286Z",
-        "age": 8
-      },
-      "phone": "031-264-5629",
-      "cell": "081-859-8095",
-      "id": {
-        "name": "PPS",
-        "value": "3450582T"
-      },
-      "picture": {
-        "large": "https://randomuser.me/api/portraits/men/46.jpg",
-        "medium": "https://randomuser.me/api/portraits/med/men/46.jpg",
-        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/46.jpg"
-      }
+    "phone": "(439)-741-1246",
+    "cell": "(626)-097-5896",
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/men/39.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/men/39.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/men/39.jpg"
     }
-  ]
+  },
+  {
+    "gender": "female",
+    "name": {
+      "title": "Ms",
+      "first": "Mércia",
+      "last": "da Cruz"
+    },
+    "location": {
+      "street": {
+        "number": 1075,
+        "name": "Avenida D. Pedro Ii"
+      },
+      "city": "Botucatu",
+      "state": "Sergipe",
+      "country": "Brazil",
+      "postcode": 35250
+    },
+    "email": "mercia.dacruz@example.com",
+    "dob": {
+      "date": "1975-06-29T23:00:50.339Z",
+      "age": 46
+    },
+    "phone": "(77) 6581-3802",
+    "cell": "(92) 8180-3442",
+    "id": {
+      "name": "",
+      "value": null
+    },
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/women/30.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/women/30.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/women/30.jpg"
+    }
+  },
+  {
+    "gender": "male",
+    "name": {
+      "title": "Mr",
+      "first": "Rene",
+      "last": "Bradley"
+    },
+    "location": {
+      "street": {
+        "number": 1997,
+        "name": "Station Road"
+      },
+      "city": "Kingston upon Hull",
+      "state": "West Sussex",
+      "country": "United Kingdom",
+      "postcode": "R7N 7XN"
+    },
+    "email": "rene.bradley@example.com",
+    "dob": {
+      "date": "1979-02-09T05:52:04.972Z",
+      "age": 42
+    },
+    "phone": "017687 29668",
+    "cell": "0759-062-723",
+    "id": {
+      "name": "NINO",
+      "value": "RC 57 50 86 P"
+    },
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/men/25.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/men/25.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/men/25.jpg"
+    }
+  },
+  {
+    "gender": "male",
+    "name": {
+      "title": "Mr",
+      "first": "Luca",
+      "last": "Morel"
+    },
+    "location": {
+      "street": {
+        "number": 4834,
+        "name": "Place Paul-Duquaire"
+      },
+      "city": "Nice",
+      "state": "Aube",
+      "country": "France",
+      "postcode": 82631
+    },
+    "email": "luca.morel@example.com",
+    "dob": {
+      "date": "1953-08-02T15:00:02.422Z",
+      "age": 68
+    },
+    "phone": "04-40-99-65-67",
+    "cell": "06-74-54-66-62",
+    "id": {
+      "name": "INSEE",
+      "value": "1NNaN47536989 75"
+    },
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/men/59.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/men/59.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/men/59.jpg"
+    }
+  },
+  {
+    "gender": "male",
+    "name": {
+      "title": "Mr",
+      "first": "Nicholas",
+      "last": "Brewer"
+    },
+    "location": {
+      "street": {
+        "number": 9734,
+        "name": "The Grove"
+      },
+      "city": "Kilcoole",
+      "state": "South Dublin",
+      "country": "Ireland",
+      "postcode": 98571
+    },
+    "email": "nicholas.brewer@example.com",
+  
+    "dob": {
+      "date": "1965-06-04T15:03:46.446Z",
+      "age": 56
+    },
+    "registered": {
+      "date": "2013-01-28T22:52:57.286Z",
+      "age": 8
+    },
+    "phone": "031-264-5629",
+    "cell": "081-859-8095",
+    "id": {
+      "name": "PPS",
+      "value": "3450582T"
+    },
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/men/46.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/men/46.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/men/46.jpg"
+    }
+  }
+]

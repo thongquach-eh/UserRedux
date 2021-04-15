@@ -1,17 +1,18 @@
+// @flow
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, UserListScreen } from './components/index';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {HomeScreen, UserListScreen} from './components/index';
 
 const Stack = createStackNavigator();
 
-function App() {
+function App(): React.Node {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name='Home'
+          name="Home"
           component={HomeScreen}
           options={{title: 'User Management'}}
         />
