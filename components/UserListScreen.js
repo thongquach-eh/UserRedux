@@ -1,17 +1,23 @@
 // @flow
 import * as React from 'react';
-import { StyleSheet, Text, FlatList, Image, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import usersData from '../data/users.json';
-import type { RouteProp } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import type {RouteProp} from '@react-navigation/native';
+import type {StackNavigationProp} from '@react-navigation/stack';
 
 type UserNameProps = {
   title: ?string,
   first: string,
   last: string,
-}
+};
 
-const renderName = (name : UserNameProps) : React.Node => (
+const renderName = (name: UserNameProps): React.Node => (
   <Text style={styles.name}>
     {name.title}. {name.first} {name.last}
   </Text>
@@ -26,26 +32,28 @@ type UserLocationProps = {
   state: ?string,
   country: ?string,
   postcode: ?string,
-}
+};
 
-const renderLocation = (loc : UserLocationProps) : React.Node => (
+const renderLocation = (loc: UserLocationProps): React.Node => (
   <Text>
-    {loc.street.number} {loc.street.name}, {loc.city} {loc.state}, {loc.postcode}, {loc.country}
+    {loc.street.number} {loc.street.name}, {loc.city} {loc.state},{' '}
+    {loc.postcode}, {loc.country}
   </Text>
 );
 
 type UserDobProps = {
   date: ?string,
   age: ?number,
-}
+};
 
-const renderDob = (dob : UserDobProps) : React.Node => (
+const renderDob = (dob: UserDobProps): React.Node => (
   <Text>
-    {dob.date && (new Date(dob.date)).toLocaleDateString('default', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })}
+    {dob.date &&
+      new Date(dob.date).toLocaleDateString('default', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })}
   </Text>
 );
 
@@ -62,9 +70,9 @@ type UserProps = {
     medium: ?string,
     thumbnail: ?string,
   },
-}
+};
 
-const renderUser = (user: UserProps) : React.Node => (
+const renderUser = (user: UserProps): React.Node => (
   <TouchableHighlight style={styles.item}>
     <>
       <Image
@@ -81,7 +89,7 @@ const renderUser = (user: UserProps) : React.Node => (
 );
 
 const styles = StyleSheet.create({
-  item : {
+  item: {
     backgroundColor: 'lightblue',
     padding: 15,
     marginVertical: 8,
@@ -93,22 +101,25 @@ const styles = StyleSheet.create({
   avatar: {
     width: 72,
     height: 72,
-  }
+  },
 });
 
 type UserListScreenProps = {
   navigation: StackNavigationProp<any, any>,
   route: RouteProp<any, any>,
-}
+};
 
-const UserListScreen = ({ navigation, route } : UserListScreenProps) : React.Node => {
+const UserListScreen = ({
+  navigation,
+  route,
+}: UserListScreenProps): React.Node => {
   return (
     <FlatList
       data={usersData}
-      renderItem={({item : user}) => renderUser(user)}
+      renderItem={({item: user}) => renderUser(user)}
       keyExtractor={user => user.email}
     />
   );
-}
+};
 
 export default UserListScreen;
