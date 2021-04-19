@@ -1,10 +1,4 @@
 // @flow
-export type RootStackParamList = {
-  Home: typeof undefined,
-  UserList: typeof undefined,
-  UserDetails: {userEmail: string},
-};
-
 export type User = {
   +gender: ?string,
   +name: {
