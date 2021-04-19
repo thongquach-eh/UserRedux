@@ -4,7 +4,8 @@ import {Text, StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   fullName: {
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '500',
   },
 });
 
