@@ -1,5 +1,5 @@
 //@flow
-import userArray from './data/users.json';
+import userArray from '../data/users.json';
 import type {UserState, UserAction} from './types.js';
 
 const initialState = {
