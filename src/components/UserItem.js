@@ -32,7 +32,14 @@ const UserItem = ({
   user: User,
   navigation: StackNavigationProp<any, any>,
 }): React.Node => (
-  <TouchableHighlight activeOpacity={0.6} underlayColor="#DDDDDD">
+  <TouchableHighlight
+    activeOpacity={0.6}
+    underlayColor="#DDDDDD"
+    onPress={() =>
+      navigation.navigate('UserDetails', {
+        userEmail: user.email,
+      })
+    }>
     <View style={styles.userContainer}>
       <Image
         style={styles.avatar}

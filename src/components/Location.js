@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import {Text} from 'react-native';
+import type {TextStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 const Location = ({
   streetName,
@@ -9,6 +10,8 @@ const Location = ({
   state,
   postcode,
   country,
+  onPress,
+  style,
 }: {
   streetName: ?string,
   streetNum: ?number,
@@ -16,8 +19,10 @@ const Location = ({
   state: ?string,
   postcode: ?string,
   country: ?string,
+  onPress?: any => any,
+  style?: TextStyleProp,
 }): React.Node => (
-  <Text>
+  <Text style={style} onPress={onPress}>
     {streetName} {streetNum}, {city} {state}, {postcode} {country}
   </Text>
 );
