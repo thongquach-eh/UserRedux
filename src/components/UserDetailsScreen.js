@@ -47,13 +47,11 @@ type UserDetailsProps = {
 };
 
 const openMaps = location => {
-  const city = location.city;
-  const state = location.state;
-  const country = location.country;
-
-  let searchableAddress = `${city ? city : ''},${state ? state : ''},${
-    country ? country : ''
-  }`;
+  let searchableAddress = [
+    location.city,
+    location.state,
+    location.country,
+  ].join(',');
   searchableAddress = searchableAddress.replace(/\s/g, '+');
 
   Linking.openURL('https://www.google.com/maps?q=' + searchableAddress);
