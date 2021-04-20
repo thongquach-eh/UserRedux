@@ -3,7 +3,11 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HomeScreen, UserListScreen} from './components/index';
+import {
+  HomeScreen,
+  UserListScreen,
+  UserDetailsScreen,
+} from './components/index';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import usersReducer from './UsersReducer';
@@ -25,6 +29,11 @@ function App(): React.Node {
             name="UserList"
             component={UserListScreen}
             options={{title: 'Users'}}
+          />
+          <Stack.Screen
+            name="UserDetails"
+            component={UserDetailsScreen}
+            options={{title: 'User Details'}}
           />
         </Stack.Navigator>
       </NavigationContainer>
