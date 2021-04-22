@@ -8,11 +8,11 @@ export type RootStackParamList = {
 export type User = {
   +gender: ?string,
   +name: {
-    +title: ?string,
+    +title?: string,
     +first: string,
     +last: string,
   },
-  +location: {
+  +location?: {
     +street: {
       +number: ?number,
       +name: ?string,
@@ -23,13 +23,13 @@ export type User = {
     +postcode: ?string,
   },
   +email: string,
-  +dob: {
+  +dob?: {
     +date: ?string,
     +age: ?number,
   },
   +phone: ?string,
   +cell: ?string,
-  +picture: {
+  +picture?: {
     +large: ?string,
     +medium: ?string,
     +thumbnail: ?string,
@@ -40,8 +40,11 @@ export type UserState = {
   +users: Array<User>,
 };
 
-export type UserAction = {
-  +type: string,
+export type UserAction = AddUserAction;
+
+export type AddUserAction = {
+  type: 'ADD_USER',
+  newUser: User,
 };
 
 export type UserDispatch = (action: UserAction) => void;

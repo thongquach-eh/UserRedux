@@ -21,17 +21,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   detailsContainer: {
-    margin: 16,
+    margin: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   detailLabel: {
     flexBasis: '25%',
     fontSize: 16,
+    marginVertical: 2,
   },
   detailInfo: {
     flexBasis: '75%',
     fontSize: 16,
+    marginVertical: 2,
   },
   locationInfo: {
     flexBasis: '75%',
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type UserDetailsProps = {
+type UserDetailsScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'UserDetails'>,
   route: RouteProp<RootStackParamList, 'UserDetails'>,
 };
@@ -60,7 +62,7 @@ const openMaps = location => {
 const UserDetailsScreen = ({
   navigation,
   route,
-}: UserDetailsProps): React.Node => {
+}: UserDetailsScreenProps): React.Node => {
   const {userEmail}: {userEmail: string} = route.params;
   const user: ?User = useSelector((state: UserState) =>
     state.users.find(u => u.email === userEmail),
@@ -83,7 +85,7 @@ const UserDetailsScreen = ({
         <Image
           style={styles.avatar}
           source={{
-            uri: user.picture.large,
+            uri: user.picture?.large,
           }}
         />
         <FullName title={name.title} first={name.first} last={name.last} />
@@ -96,16 +98,18 @@ const UserDetailsScreen = ({
         {user.phone && <Text style={styles.detailLabel}>Phone:</Text>}
         {user.phone && <Phone value={user.phone} style={styles.detailInfo} />}
         <Text style={styles.detailLabel}>Location:</Text>
-        <Location
-          streetName={location.street.name}
-          streetNum={location.street.number}
-          city={location.city}
-          state={location.state}
-          postcode={location.postcode}
-          country={location.country}
-          onPress={() => openMaps(location)}
-          style={styles.locationInfo}
-        />
+        {location && (
+          <Location
+            streetName={location.street.name}
+            streetNum={location.street.number}
+            city={location.city}
+            state={location.state}
+            postcode={location.postcode}
+            country={location.country}
+            onPress={() => openMaps(location)}
+            style={styles.locationInfo}
+          />
+        )}
       </View>
     </>
   );

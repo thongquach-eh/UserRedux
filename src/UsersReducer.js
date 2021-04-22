@@ -11,6 +11,12 @@ const usersReducer = (
   action: UserAction,
 ): UserState => {
   switch (action.type) {
+    case 'ADD_USER':
+      return {
+        ...state,
+        users: [...state.users, action.newUser],
+      };
+
     default:
       return state;
   }

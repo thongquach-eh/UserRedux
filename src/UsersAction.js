@@ -1,6 +1,7 @@
 //@flow
-import type {UserAction} from './types.js';
+import type {UserAction, User} from './types.js';
 
-export const addUser = (): UserAction => ({
+export const addUser = (user: User): UserAction => ({
   type: 'ADD_USER',
+  newUser: user,
 });
