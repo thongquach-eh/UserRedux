@@ -11,7 +11,7 @@ import type {UserDispatch, User} from '../types.js';
 import UserInput from './UserInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-type UserUpdateScreenProps = {
+type AddUserScreenProps = {
   navigation: StackNavigationProp<any, any>,
   route: RouteProp<any, any>,
 };
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const UserUpdateScreen = ({navigation, route}: UserUpdateScreenProps): Node => {
+const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
   const newUser = {
     name: {
@@ -149,4 +149,4 @@ const UserUpdateScreen = ({navigation, route}: UserUpdateScreenProps): Node => {
   );
 };
 
-export default UserUpdateScreen;
+export default AddUserScreen;

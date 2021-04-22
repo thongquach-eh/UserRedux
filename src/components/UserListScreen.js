@@ -21,7 +21,7 @@ const UserListScreen = ({
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button title="Add" onPress={() => navigation.navigate('UserUpdate')} />
+        <Button title="Add" onPress={() => navigation.navigate('AddUser')} />
       ),
     });
   });
