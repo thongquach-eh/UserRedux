@@ -7,6 +7,7 @@ import {
   HomeScreen,
   UserListScreen,
   UserDetailsScreen,
+  UserUpdateScreen,
 } from './components/index';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
@@ -34,6 +35,11 @@ function App(): React.Node {
             name="UserDetails"
             component={UserDetailsScreen}
             options={{title: 'User Details'}}
+          />
+          <Stack.Screen
+            name="UserUpdate"
+            component={UserUpdateScreen}
+            options={{title: 'Create/Edit User'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Button} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import type {UserState} from '../types.js';
@@ -17,6 +17,14 @@ const UserListScreen = ({
   route,
 }: UserListScreenProps): React.Node => {
   const users = useSelector((state: UserState) => state.users);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button title="Add" onPress={() => navigation.navigate('UserUpdate')} />
+      ),
+    });
+  });
 
   return (
     <FlatList

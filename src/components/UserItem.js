@@ -44,7 +44,7 @@ const UserItem = ({
       <Image
         style={styles.avatar}
         source={{
-          uri: user.picture.medium,
+          uri: user.picture?.medium,
         }}
       />
       <View style={styles.userInfo}>
@@ -53,15 +53,17 @@ const UserItem = ({
           first={user.name.first}
           last={user.name.last}
         />
-        <Location
-          streetName={user.location.street.name}
-          streetNum={user.location.street.number}
-          city={user.location.city}
-          state={user.location.state}
-          postcode={user.location.postcode}
-          country={user.location.country}
-        />
-        {user.dob.date && <BirthDate date={user.dob.date} />}
+        {user.location && (
+          <Location
+            streetName={user.location.street.name}
+            streetNum={user.location.street.number}
+            city={user.location.city}
+            state={user.location.state}
+            postcode={user.location.postcode}
+            country={user.location.country}
+          />
+        )}
+        {user.dob && user.dob.date && <BirthDate date={user.dob.date} />}
       </View>
     </View>
   </TouchableHighlight>
