@@ -26,7 +26,7 @@ const UserInput = ({
   onChangeText,
 }: {
   label: string,
-  onChangeText?: any => any,
+  onChangeText?: ?(text: string) => mixed,
 }): React.Node => {
   return (
     <View style={styles.container}>

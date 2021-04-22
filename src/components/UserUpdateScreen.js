@@ -118,8 +118,8 @@ const UserUpdateScreen = ({navigation, route}: UserUpdateScreenProps): Node => {
       <View style={styles.locationContainer}>
         <UserInput
           label="Number"
-          onChangeText={(val: number) =>
-            writeValue(val, 'location.street.number')
+          onChangeText={(val: string) =>
+            writeValue(parseInt(val, 10), 'location.street.number')
           }
         />
         <UserInput
