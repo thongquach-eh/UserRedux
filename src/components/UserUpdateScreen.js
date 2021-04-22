@@ -1,7 +1,7 @@
 // @flow
 import React, {useLayoutEffect, useState, useCallback} from 'react';
 import type {Node} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet, Image} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch} from 'react-redux';
@@ -10,6 +10,7 @@ import _ from 'lodash';
 import type {UserDispatch, User} from '../types.js';
 import UserInput from './UserInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ImagePicker from 'react-native-image-picker';
 
 type UserUpdateScreenProps = {
   navigation: StackNavigationProp<any, any>,
@@ -56,11 +57,6 @@ const UserUpdateScreen = ({navigation, route}: UserUpdateScreenProps): Node => {
   };
   const [user, setUser] = useState<User>(newUser);
 
-  const writeValue = (value: string | number, path: string): void => {
-    const updatedUser = _.set(user, path, value);
-    setUser(updatedUser);
-  };
-
   const saveUser = useCallback(() => {
     if (user != null) {
       dispatch(addUser(user));
@@ -74,8 +70,27 @@ const UserUpdateScreen = ({navigation, route}: UserUpdateScreenProps): Node => {
     });
   }, [navigation, saveUser]);
 
+  const writeValue = (value: string | number, path: string): void => {
+    const updatedUser = _.set(user, path, value);
+    setUser(updatedUser);
+  };
+
+  const handleChooseAvatar = () => {
+    const options = {
+      noData: true,
+    };
+    ImagePicker.lauchImageLibrary(options, response => {
+      if (response.uri) {
+        writeValue(response.uri, 'picture.large');
+        writeValue(response.uri, 'medium');
+      }
+    });
+  };
+
   return (
     <View style={styles.detailsContainer}>
+      <Button title="Choose Avatar" onPress={handleChooseAvatar} />
+      {user.picture?.large && <Image source={{uri: user.picture.large}} />}
       <UserInput
         label="Title:"
         onChangeText={(val: string) => writeValue(val, 'name.title')}
