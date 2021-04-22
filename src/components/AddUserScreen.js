@@ -1,15 +1,17 @@
 // @flow
 import React, {useLayoutEffect, useState, useCallback} from 'react';
 import type {Node} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet, Image, ScrollView} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addUser} from '../UsersAction';
 import _ from 'lodash';
-import type {UserDispatch, User} from '../types.js';
+import type {UserDispatch, User, UserState} from '../types.js';
 import UserInput from './UserInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 type AddUserScreenProps = {
   navigation: StackNavigationProp<any, any>,
@@ -17,6 +19,11 @@ type AddUserScreenProps = {
 };
 
 const styles = StyleSheet.create({
+  avatar: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+  },
   detailsContainer: {
     margin: 10,
   },
@@ -27,23 +34,25 @@ const styles = StyleSheet.create({
   locationContainer: {
     marginLeft: 10,
   },
-  dobContainer: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  dobLabel: {
+  inputLabel: {
     flexBasis: '25%',
     fontSize: 16,
     marginVertical: 3,
   },
-  dobValue: {
+  inputValue: {
     flexBasis: '75%',
+    fontSize: 16,
     marginVertical: 3,
   },
 });
 
 const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
+  const users = useSelector((state: UserState) => state.users);
   const newUser = {
     name: {
       first: '',
@@ -56,17 +65,17 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   };
   const [user, setUser] = useState<User>(newUser);
 
-  const writeValue = (value: string | number, path: string): void => {
-    const updatedUser = _.set(user, path, value);
-    setUser(updatedUser);
-  };
-
   const saveUser = useCallback(() => {
-    if (user != null) {
-      dispatch(addUser(user));
+    for (var otherUser of users) {
+      if (otherUser.email === user.email) {
+        // eslint-disable-next-line no-alert
+        alert('This email address has already been used.');
+        return;
+      }
     }
+    dispatch(addUser(user));
     navigation.goBack();
-  }, [dispatch, navigation, user]);
+  }, [dispatch, navigation, user, users]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,32 +83,70 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
     });
   }, [navigation, saveUser]);
 
+  const writeValue = useCallback(
+    (value: string | number, path: string): void => {
+      const updatedUser = _.clone(_.set(user, path, value));
+      setUser(updatedUser);
+    },
+    [user],
+  );
+
+  const handleChooseAvatar = useCallback(() => {
+    const options = {
+      noData: true,
+    };
+    launchImageLibrary(options, response => {
+      if (response.uri) {
+        writeValue(response.uri, 'picture.large');
+        writeValue(response.uri, 'picture.medium');
+        writeValue(response.uri, 'picture.thumbnail');
+      }
+    });
+  }, [writeValue]);
+
   return (
-    <View style={styles.detailsContainer}>
-      <UserInput
-        label="Title:"
-        onChangeText={(val: string) => writeValue(val, 'name.title')}
-      />
+    <ScrollView style={styles.detailsContainer}>
+      <Image source={{uri: user.picture?.large}} style={styles.avatar} />
+      <Button title="Choose Avatar" onPress={handleChooseAvatar} />
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Title:</Text>
+        <Picker
+          style={styles.inputValue}
+          selectedValue={user.name.title}
+          onValueChange={(val: string | number) =>
+            writeValue(val, 'name.title')
+          }>
+          <Picker.Item label="Mr" value="Mr" />
+          <Picker.Item label="Ms" value="Ms" />
+          <Picker.Item label="Mrs" value="Mrs" />
+        </Picker>
+      </View>
       <UserInput
         label="First name:"
         onChangeText={(val: string) => writeValue(val, 'name.first')}
       />
       <UserInput
-        label="Last:"
+        label="Last name:"
         onChangeText={(val: string) => writeValue(val, 'name.last')}
       />
-      <UserInput
-        label="Gender:"
-        onChangeText={(val: string) => writeValue(val, 'gender')}
-      />
-      <View style={styles.dobContainer}>
-        <Text style={styles.dobLabel}>Birth date:</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Gender:</Text>
+        <Picker
+          style={styles.inputValue}
+          selectedValue={user.gender}
+          onValueChange={(val: string | number) => writeValue(val, 'gender')}>
+          <Picker.Item label="male" value="male" />
+          <Picker.Item label="female" value="female" />
+        </Picker>
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Birth date:</Text>
         <DateTimePicker
           value={user.dob?.date ? new Date(user.dob.date) : new Date()}
           onChange={(event, val: string) =>
             writeValue(new Date(val).toISOString(), 'dob.date')
           }
-          style={styles.dobValue}
+          style={styles.inputValue}
         />
       </View>
       <UserInput
@@ -145,7 +192,7 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
           onChangeText={(val: string) => writeValue(val, 'location.country')}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
