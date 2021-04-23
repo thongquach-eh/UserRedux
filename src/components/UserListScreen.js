@@ -3,13 +3,13 @@ import * as React from 'react';
 import {FlatList, Button} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import type {UserState} from '../types.js';
+import type {UserState, RootStackParamList} from '../types.js';
 import {useSelector} from 'react-redux';
 import UserItem from './UserItem';
 
 type UserListScreenProps = {
-  navigation: StackNavigationProp<any, any>,
-  route: RouteProp<any, any>,
+  navigation: StackNavigationProp<RootStackParamList, 'UserList'>,
+  route: RouteProp<RootStackParamList, 'UserList'>,
 };
 
 const UserListScreen = ({

@@ -23,15 +23,21 @@ const styles = StyleSheet.create({
 
 const UserInput = ({
   label,
+  value,
   onChangeText,
 }: {
   label: string,
+  value?: ?string,
   onChangeText?: ?(text: string) => mixed,
 }): React.Node => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput style={styles.value} onChangeText={onChangeText} />
+      <TextInput
+        style={styles.value}
+        value={value}
+        onChangeText={onChangeText}
+      />
     </View>
   );
 };

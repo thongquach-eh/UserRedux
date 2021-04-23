@@ -8,6 +8,7 @@ import {
   UserListScreen,
   UserDetailsScreen,
   AddUserScreen,
+  EditUserScreen,
 } from './components/index';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
@@ -40,6 +41,11 @@ function App(): React.Node {
             name="AddUser"
             component={AddUserScreen}
             options={{title: 'Add User'}}
+          />
+          <Stack.Screen
+            name="EditUser"
+            component={EditUserScreen}
+            options={{title: 'Edit User'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

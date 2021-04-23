@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import {View, Text, StyleSheet, Image, Linking} from 'react-native';
+import {View, Text, StyleSheet, Image, Linking, Button} from 'react-native';
 import FullName from './FullName';
 import Phone from './Phone';
 import Email from './Email';
@@ -67,6 +67,21 @@ const UserDetailsScreen = ({
   const user: ?User = useSelector((state: UserState) =>
     state.users.find(u => u.email === userEmail),
   );
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Edit"
+          onPress={() =>
+            navigation.navigate('EditUser', {
+              userEmail: user?.email || '',
+            })
+          }
+        />
+      ),
+    });
+  }, [navigation, user?.email]);
 
   if (user == null) {
     return (

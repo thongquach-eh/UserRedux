@@ -5,7 +5,7 @@ import {View, Text, Button, StyleSheet, Image, ScrollView} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../UsersAction';
+import {editUser} from '../UsersAction';
 import {set} from 'lodash/fp';
 import type {
   UserDispatch,
@@ -18,9 +18,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import {launchImageLibrary} from 'react-native-image-picker';
 
-type AddUserScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'AddUser'>,
-  route: RouteProp<RootStackParamList, 'AddUser'>,
+type EditUserScreenProps = {
+  navigation: StackNavigationProp<RootStackParamList, 'EditUser'>,
+  route: RouteProp<RootStackParamList, 'EditUser'>,
+};
+
+type EditUserPanelProps = {
+  ...EditUserScreenProps,
+  user: User,
 };
 
 const styles = StyleSheet.create({
@@ -58,27 +63,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
+const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
+  const {userEmail}: {userEmail: string} = route.params;
   const dispatch = useDispatch<UserDispatch>();
   const users = useSelector((state: UserState) => state.users);
-  const newUser = {
-    name: {
-      first: '',
-      last: '',
-    },
-    email: '',
-    phone: '',
-    cell: '',
-    gender: '',
-  };
-  const [user, setUser] = useState<User>(newUser);
+  const [draftUser, setDraftUser] = useState<User>(user);
 
-  const saveUser = useCallback(
+  const saveEditedUser = useCallback(
     u => {
       if (u.email === '') {
         // eslint-disable-next-line no-alert
-        alert('Email address cannot be empty.');
-        return false;
+        alert('Email addres cannot be empty');
       }
 
       for (var otherUser of users) {
@@ -89,10 +84,10 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
         }
       }
 
-      dispatch(addUser(u));
+      dispatch(editUser(userEmail, u));
       return true;
     },
-    [dispatch, users],
+    [dispatch, userEmail, users],
   );
 
   useLayoutEffect(() => {
@@ -101,21 +96,21 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
         <Button
           title="Save"
           onPress={() => {
-            if (saveUser(user)) {
+            if (saveEditedUser(draftUser)) {
               navigation.goBack();
             }
           }}
         />
       ),
     });
-  }, [saveUser, navigation, user]);
+  }, [saveEditedUser, navigation, draftUser]);
 
   const writeValue = useCallback(
     (value: any, path: string, u: User) => {
       const updatedUser = set(path, value)(u);
-      setUser(updatedUser);
+      setDraftUser(updatedUser);
     },
-    [setUser],
+    [setDraftUser],
   );
 
   const handleChooseAvatar = useCallback(
@@ -136,18 +131,22 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
     },
     [writeValue],
   );
+
   return (
     <ScrollView style={styles.detailsContainer}>
-      <Image source={{uri: user.picture?.large}} style={styles.avatar} />
-      <Button title="Choose Avatar" onPress={() => handleChooseAvatar(user)} />
+      <Image source={{uri: draftUser.picture?.large}} style={styles.avatar} />
+      <Button
+        title="Choose Avatar"
+        onPress={() => handleChooseAvatar(draftUser)}
+      />
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Title:</Text>
         <Picker
           style={styles.inputValue}
           itemStyle={styles.pickerItem}
-          selectedValue={user.name.title}
+          selectedValue={draftUser.name.title}
           onValueChange={(val: string | number) =>
-            writeValue(val, 'name.title', user)
+            writeValue(val, 'name.title', draftUser)
           }>
           <Picker.Item label="Mr" value="Mr" />
           <Picker.Item label="Ms" value="Ms" />
@@ -156,20 +155,22 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
       </View>
       <UserInput
         label="First name:"
-        onChangeText={(val: string) => writeValue(val, 'name.first', user)}
+        value={draftUser.name.first}
+        onChangeText={(val: string) => writeValue(val, 'name.first', draftUser)}
       />
       <UserInput
         label="Last name:"
-        onChangeText={(val: string) => writeValue(val, 'name.last', user)}
+        value={draftUser.name.last}
+        onChangeText={(val: string) => writeValue(val, 'name.last', draftUser)}
       />
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Gender:</Text>
         <Picker
           style={styles.inputValue}
           itemStyle={styles.pickerItem}
-          selectedValue={user.gender}
+          selectedValue={draftUser.gender}
           onValueChange={(val: string | number) =>
-            writeValue(val, 'gender', user)
+            writeValue(val, 'gender', draftUser)
           }>
           <Picker.Item label="male" value="male" />
           <Picker.Item label="female" value="female" />
@@ -178,59 +179,72 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Birth date:</Text>
         <DateTimePicker
-          value={user.dob?.date ? new Date(user.dob.date) : new Date()}
+          value={
+            draftUser.dob?.date ? new Date(draftUser.dob.date) : new Date()
+          }
           onChange={(event, val: string) =>
-            writeValue(new Date(val).toISOString(), 'dob.date', user)
+            writeValue(new Date(val).toISOString(), 'dob.date', draftUser)
           }
           style={styles.inputValue}
         />
       </View>
       <UserInput
         label="Email:"
-        onChangeText={(val: string) => writeValue(val, 'email', user)}
+        value={draftUser.email}
+        onChangeText={(val: string) => writeValue(val, 'email', draftUser)}
       />
       <UserInput
         label="Phone:"
-        onChangeText={(val: string) => writeValue(val, 'phone', user)}
+        value={draftUser.phone}
+        onChangeText={(val: string) => writeValue(val, 'phone', draftUser)}
       />
       <UserInput
         label="Cellphone:"
-        onChangeText={(val: string) => writeValue(val, 'cell', user)}
+        value={draftUser.cell}
+        onChangeText={(val: string) => writeValue(val, 'cell', draftUser)}
       />
       <Text style={styles.locationLabel}>Location:</Text>
       <View style={styles.locationContainer}>
         <UserInput
           label="Number"
+          value={draftUser.location?.street.number?.toString()}
           onChangeText={(val: string) =>
-            writeValue(parseInt(val, 10), 'location.street.number', user)
+            writeValue(parseInt(val, 10), 'location.street.number', draftUser)
           }
         />
         <UserInput
           label="Street"
+          value={draftUser.location?.street.name}
           onChangeText={(val: string) =>
-            writeValue(val, 'location.street.name', user)
+            writeValue(val, 'location.street.name', draftUser)
           }
         />
         <UserInput
           label="City"
-          onChangeText={(val: string) => writeValue(val, 'location.city', user)}
+          value={draftUser.location?.city}
+          onChangeText={(val: string) =>
+            writeValue(val, 'location.city', draftUser)
+          }
         />
         <UserInput
           label="State"
+          value={draftUser.location?.state}
           onChangeText={(val: string) =>
-            writeValue(val, 'location.state', user)
+            writeValue(val, 'location.state', draftUser)
           }
         />
         <UserInput
           label="Postcode"
+          value={draftUser.location?.postcode.toString()}
           onChangeText={(val: string) =>
-            writeValue(val, 'location.postcode', user)
+            writeValue(val, 'location.postcode', draftUser)
           }
         />
         <UserInput
           label="Country"
+          value={draftUser.location?.country}
           onChangeText={(val: string) =>
-            writeValue(val, 'location.country', user)
+            writeValue(val, 'location.country', draftUser)
           }
         />
       </View>
@@ -238,4 +252,27 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   );
 };
 
-export default AddUserScreen;
+const EditUserScreen = ({navigation, route}: EditUserScreenProps): Node => {
+  const {userEmail}: {userEmail: string} = route.params;
+  const retrievedUser: ?User = useSelector((state: UserState) =>
+    state.users.find(u => u.email === userEmail),
+  );
+
+  if (retrievedUser == null) {
+    return (
+      <Text>
+        Error when trying to display the user with email: {userEmail}!
+      </Text>
+    );
+  } else {
+    return (
+      <EditUserPanel
+        user={retrievedUser}
+        navigation={navigation}
+        route={route}
+      />
+    );
+  }
+};
+
+export default EditUserScreen;
