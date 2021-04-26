@@ -1,9 +1,19 @@
 // @flow
 import React, {useLayoutEffect, useState, useCallback} from 'react';
 import type {Node} from 'react';
-import {View, Text, Button, StyleSheet, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
+import {useHeaderHeight} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {addUser} from '../UsersAction';
 import {set} from 'lodash/fp';
@@ -27,6 +37,9 @@ type AddUserScreenProps = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   avatar: {
     width: 150,
     height: 150,
@@ -130,104 +143,114 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
     [writeValue],
   );
   return (
-    <ScrollView style={styles.detailsContainer}>
-      <Image source={{uri: user.picture?.large}} style={styles.avatar} />
-      <Button title="Choose Avatar" onPress={() => handleChooseAvatar(user)} />
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Title:</Text>
-        <Picker
-          style={styles.inputValue}
-          itemStyle={styles.pickerItem}
-          selectedValue={user.name.title}
-          onValueChange={(val: string | number) =>
-            writeValue(val, 'name.title', user)
-          }>
-          <Picker.Item label="Mr" value="Mr" />
-          <Picker.Item label="Ms" value="Ms" />
-          <Picker.Item label="Mrs" value="Mrs" />
-        </Picker>
-      </View>
-      <UserInput
-        label="First name:"
-        onChangeText={(val: string) => writeValue(val, 'name.first', user)}
-      />
-      <UserInput
-        label="Last name:"
-        onChangeText={(val: string) => writeValue(val, 'name.last', user)}
-      />
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Gender:</Text>
-        <Picker
-          style={styles.inputValue}
-          itemStyle={styles.pickerItem}
-          selectedValue={user.gender}
-          onValueChange={(val: string | number) =>
-            writeValue(val, 'gender', user)
-          }>
-          <Picker.Item label="male" value="male" />
-          <Picker.Item label="female" value="female" />
-        </Picker>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Birth date:</Text>
-        <DateTimePicker
-          value={user.dob?.date ? new Date(user.dob.date) : new Date()}
-          onChange={(event, val: string) =>
-            writeValue(new Date(val).toISOString(), 'dob.date', user)
-          }
-          style={styles.inputValue}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={styles.container}
+      keyboardVerticalOffset={useHeaderHeight() + 20}>
+      <ScrollView style={styles.detailsContainer}>
+        <Image source={{uri: user.picture?.large}} style={styles.avatar} />
+        <Button
+          title="Choose Avatar"
+          onPress={() => handleChooseAvatar(user)}
         />
-      </View>
-      <UserInput
-        label="Email:"
-        onChangeText={(val: string) => writeValue(val, 'email', user)}
-      />
-      <UserInput
-        label="Phone:"
-        onChangeText={(val: string) => writeValue(val, 'phone', user)}
-      />
-      <UserInput
-        label="Cellphone:"
-        onChangeText={(val: string) => writeValue(val, 'cell', user)}
-      />
-      <Text style={styles.locationLabel}>Location:</Text>
-      <View style={styles.locationContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Title:</Text>
+          <Picker
+            style={styles.inputValue}
+            itemStyle={styles.pickerItem}
+            selectedValue={user.name.title}
+            onValueChange={(val: string | number) =>
+              writeValue(val, 'name.title', user)
+            }>
+            <Picker.Item label="Mr" value="Mr" />
+            <Picker.Item label="Ms" value="Ms" />
+            <Picker.Item label="Mrs" value="Mrs" />
+          </Picker>
+        </View>
         <UserInput
-          label="Number"
-          onChangeText={(val: string) =>
-            writeValue(parseInt(val, 10), 'location.street.number', user)
-          }
+          label="First name:"
+          onChangeText={(val: string) => writeValue(val, 'name.first', user)}
         />
         <UserInput
-          label="Street"
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.street.name', user)
-          }
+          label="Last name:"
+          onChangeText={(val: string) => writeValue(val, 'name.last', user)}
+        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Gender:</Text>
+          <Picker
+            style={styles.inputValue}
+            itemStyle={styles.pickerItem}
+            selectedValue={user.gender}
+            onValueChange={(val: string | number) =>
+              writeValue(val, 'gender', user)
+            }>
+            <Picker.Item label="male" value="male" />
+            <Picker.Item label="female" value="female" />
+          </Picker>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Birth date:</Text>
+          <DateTimePicker
+            value={user.dob?.date ? new Date(user.dob.date) : new Date()}
+            onChange={(event, val: string) =>
+              writeValue(new Date(val).toISOString(), 'dob.date', user)
+            }
+            style={styles.inputValue}
+          />
+        </View>
+        <UserInput
+          label="Email:"
+          onChangeText={(val: string) => writeValue(val, 'email', user)}
         />
         <UserInput
-          label="City"
-          onChangeText={(val: string) => writeValue(val, 'location.city', user)}
+          label="Phone:"
+          onChangeText={(val: string) => writeValue(val, 'phone', user)}
         />
         <UserInput
-          label="State"
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.state', user)
-          }
+          label="Cellphone:"
+          onChangeText={(val: string) => writeValue(val, 'cell', user)}
         />
-        <UserInput
-          label="Postcode"
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.postcode', user)
-          }
-        />
-        <UserInput
-          label="Country"
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.country', user)
-          }
-        />
-      </View>
-    </ScrollView>
+        <Text style={styles.locationLabel}>Location:</Text>
+        <View style={styles.locationContainer}>
+          <UserInput
+            label="Number"
+            onChangeText={(val: string) =>
+              writeValue(parseInt(val, 10), 'location.street.number', user)
+            }
+          />
+          <UserInput
+            label="Street"
+            onChangeText={(val: string) =>
+              writeValue(val, 'location.street.name', user)
+            }
+          />
+          <UserInput
+            label="City"
+            onChangeText={(val: string) =>
+              writeValue(val, 'location.city', user)
+            }
+          />
+          <UserInput
+            label="State"
+            onChangeText={(val: string) =>
+              writeValue(val, 'location.state', user)
+            }
+          />
+          <UserInput
+            label="Postcode"
+            onChangeText={(val: string) =>
+              writeValue(val, 'location.postcode', user)
+            }
+          />
+          <UserInput
+            label="Country"
+            onChangeText={(val: string) =>
+              writeValue(val, 'location.country', user)
+            }
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -106,8 +106,8 @@ const UserDetailsScreen = ({
         <Text style={styles.detailInfo}>{user.gender}</Text>
         <Text style={styles.detailLabel}>Email:</Text>
         <Email value={user.email} style={styles.detailInfo} />
-        {user.phone && <Text style={styles.detailLabel}>Phone:</Text>}
-        {user.phone && <Phone value={user.phone} style={styles.detailInfo} />}
+        <Text style={styles.detailLabel}>Phone:</Text>
+        <Phone value={user.phone || ''} style={styles.detailInfo} />
         <Text style={styles.detailLabel}>Location:</Text>
         {location && (
           <Location
