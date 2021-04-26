@@ -32,6 +32,7 @@ const UserListScreen = ({
       renderItem={({item: user}) => (
         <UserItem user={user} navigation={navigation} />
       )}
+      keyExtractor={user => user.id}
     />
   );
 };
