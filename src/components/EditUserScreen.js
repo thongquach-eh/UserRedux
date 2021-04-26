@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
@@ -39,6 +40,9 @@ type EditUserPanelProps = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   avatar: {
     width: 150,
     height: 150,
