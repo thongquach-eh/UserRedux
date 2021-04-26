@@ -2,12 +2,13 @@
 export type RootStackParamList = {
   Home: typeof undefined,
   UserList: typeof undefined,
-  UserDetails: {userEmail: string},
+  UserDetails: {id: string},
   AddUser: typeof undefined,
-  EditUser: {userEmail: string},
+  EditUser: {id: string},
 };
 
 export type User = {
+  +id: string,
   +gender: ?string,
   +name: {
     +title?: string,
@@ -51,7 +52,6 @@ export type AddUserAction = {
 
 export type EditUserAction = {
   type: 'EDIT_USER',
-  email: string,
   editedUser: User,
 };
 

@@ -6,8 +6,7 @@ export const addUser = (user: User): UserAction => ({
   newUser: user,
 });
 
-export const editUser = (email: string, user: User): UserAction => ({
+export const editUser = (user: User): UserAction => ({
   type: 'EDIT_USER',
-  email: email,
   editedUser: user,
 });

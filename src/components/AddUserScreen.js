@@ -17,6 +17,9 @@ import UserInput from './UserInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import {launchImageLibrary} from 'react-native-image-picker';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
+import {validateUser} from './Validations';
 
 type AddUserScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddUser'>,
@@ -62,6 +65,7 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
   const users = useSelector((state: UserState) => state.users);
   const newUser = {
+    id: uuidv4(),
     name: {
       first: '',
       last: '',
@@ -75,22 +79,11 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
 
   const saveUser = useCallback(
     u => {
-      if (u.email === '') {
-        // eslint-disable-next-line no-alert
-        alert('Email address cannot be empty.');
-        return false;
+      if (validateUser(u, users)) {
+        dispatch(addUser(u));
+        return true;
       }
-
-      for (var otherUser of users) {
-        if (otherUser.email === u.email) {
-          // eslint-disable-next-line no-alert
-          alert('This email address has already been used.');
-          return false;
-        }
-      }
-
-      dispatch(addUser(u));
-      return true;
+      return false;
     },
     [dispatch, users],
   );

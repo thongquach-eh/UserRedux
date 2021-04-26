@@ -17,6 +17,7 @@ import UserInput from './UserInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {validateUser} from './Validations';
 
 type EditUserScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'EditUser'>,
@@ -64,30 +65,19 @@ const styles = StyleSheet.create({
 });
 
 const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
-  const {userEmail}: {userEmail: string} = route.params;
   const dispatch = useDispatch<UserDispatch>();
   const users = useSelector((state: UserState) => state.users);
   const [draftUser, setDraftUser] = useState<User>(user);
 
   const saveEditedUser = useCallback(
     u => {
-      if (u.email === '') {
-        // eslint-disable-next-line no-alert
-        alert('Email addres cannot be empty');
+      if (validateUser(u, users)) {
+        dispatch(editUser(u));
+        return true;
       }
-
-      for (var otherUser of users) {
-        if (otherUser.email === u.email) {
-          // eslint-disable-next-line no-alert
-          alert('This email address has already been used.');
-          return false;
-        }
-      }
-
-      dispatch(editUser(userEmail, u));
-      return true;
+      return false;
     },
-    [dispatch, userEmail, users],
+    [dispatch, users],
   );
 
   useLayoutEffect(() => {
@@ -253,17 +243,13 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
 };
 
 const EditUserScreen = ({navigation, route}: EditUserScreenProps): Node => {
-  const {userEmail}: {userEmail: string} = route.params;
+  const {id} = route.params;
   const retrievedUser: ?User = useSelector((state: UserState) =>
-    state.users.find(u => u.email === userEmail),
+    state.users.find(u => u.id === id),
   );
 
   if (retrievedUser == null) {
-    return (
-      <Text>
-        Error when trying to display the user with email: {userEmail}!
-      </Text>
-    );
+    return <Text>Error when trying to display the user with email: {id}!</Text>;
   } else {
     return (
       <EditUserPanel

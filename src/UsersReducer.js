@@ -2,9 +2,14 @@
 import userArray from '../data/users.json';
 import type {UserState, UserAction} from './types.js';
 import _ from 'lodash';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 const initialState = {
-  users: userArray,
+  users: userArray.map(u => ({
+    ...u,
+    id: uuidv4(),
+  })),
 };
 
 const usersReducer = (
@@ -21,7 +26,7 @@ const usersReducer = (
     case 'EDIT_USER':
       const userIndex: number = _.findIndex(
         state.users,
-        u => u.email === action.email,
+        u => u.id === action.editedUser.id,
       );
       const newUsers = [...state.users];
       newUsers[userIndex] = action.editedUser;

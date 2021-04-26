@@ -63,9 +63,9 @@ const UserDetailsScreen = ({
   navigation,
   route,
 }: UserDetailsScreenProps): React.Node => {
-  const {userEmail}: {userEmail: string} = route.params;
+  const {id} = route.params;
   const user: ?User = useSelector((state: UserState) =>
-    state.users.find(u => u.email === userEmail),
+    state.users.find(u => u.id === id),
   );
 
   React.useLayoutEffect(() => {
@@ -75,20 +75,16 @@ const UserDetailsScreen = ({
           title="Edit"
           onPress={() =>
             navigation.navigate('EditUser', {
-              userEmail: user?.email || '',
+              id: user?.id || '',
             })
           }
         />
       ),
     });
-  }, [navigation, user?.email]);
+  }, [navigation, user?.id]);
 
   if (user == null) {
-    return (
-      <Text>
-        Error when trying to display the user with email: {userEmail}!
-      </Text>
-    );
+    return <Text>Error when trying to display the user with ID: {id}!</Text>;
   }
 
   const name = user.name;

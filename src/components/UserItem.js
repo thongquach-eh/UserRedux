@@ -37,7 +37,7 @@ const UserItem = ({
     underlayColor="#DDDDDD"
     onPress={() =>
       navigation.navigate('UserDetails', {
-        userEmail: user.email,
+        id: user.id,
       })
     }>
     <View style={styles.userContainer}>
