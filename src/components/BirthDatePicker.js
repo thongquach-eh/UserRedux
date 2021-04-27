@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
-import {StyleSheet, TextInput, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'center',
   },
   label: {
     flexBasis: '25%',
@@ -15,31 +17,25 @@ const styles = StyleSheet.create({
   value: {
     flexBasis: '75%',
     fontSize: 16,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
     marginVertical: 3,
   },
 });
 
-const UserInput = ({
+const BirthDatePicker = ({
   label,
   value,
-  onChangeText,
+  onChange,
 }: {
   label: string,
-  value?: ?string,
-  onChangeText?: ?(text: string) => mixed,
+  value: ?Date,
+  onChange: ?(event: any, date: string) => mixed,
 }): React.Node => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={styles.value}
-        value={value}
-        onChangeText={onChangeText}
-      />
+      <DateTimePicker value={value} onChange={onChange} style={styles.value} />
     </View>
   );
 };
 
-export default UserInput;
+export default BirthDatePicker;
