@@ -17,7 +17,7 @@ const Location = ({
   streetNum: ?number,
   city: ?string,
   state: ?string,
-  postcode: ?string,
+  postcode: ?number,
   country: ?string,
   onPress?: any => any,
   style?: TextStyleProp,

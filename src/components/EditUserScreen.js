@@ -2,6 +2,7 @@
 import React, {useLayoutEffect, useState, useCallback} from 'react';
 import type {Node} from 'react';
 import {
+  Text,
   Button,
   StyleSheet,
   Image,
@@ -13,7 +14,7 @@ import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useHeaderHeight} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../UsersAction';
+import {editUser} from '../UsersAction';
 import {set} from 'lodash/fp';
 import type {
   UserDispatch,
@@ -25,17 +26,20 @@ import type {
 } from '../types.js';
 import StringInput from './StringInput';
 import {launchImageLibrary} from 'react-native-image-picker';
-import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
 import {validateUser} from './Validations';
 import GenderPicker from './GenderPicker';
 import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';
 import FullNameInput from './FullNameInput';
 
-type AddUserScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'AddUser'>,
-  route: RouteProp<RootStackParamList, 'AddUser'>,
+type EditUserScreenProps = {
+  navigation: StackNavigationProp<RootStackParamList, 'EditUser'>,
+  route: RouteProp<RootStackParamList, 'EditUser'>,
+};
+
+type EditUserPanelProps = {
+  ...EditUserScreenProps,
+  user: User,
 };
 
 const styles = StyleSheet.create({
@@ -52,27 +56,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
+const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
   const users = useSelector((state: UserState) => state.users);
-  const newUser = {
-    id: uuidv4(),
-    name: {
-      first: '',
-      last: '',
-    },
-    email: '',
-    phone: '',
-    cell: '',
-    gender: '',
-    location: {},
-  };
-  const [user, setUser] = useState<User>(newUser);
+  const [draftUser, setDraftUser] = useState<User>(user);
 
-  const saveUser = useCallback(
+  const saveEditedUser = useCallback(
     u => {
       if (validateUser(u, users)) {
-        dispatch(addUser(u));
+        dispatch(editUser(u));
         return true;
       }
       return false;
@@ -86,29 +78,29 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
         <Button
           title="Save"
           onPress={() => {
-            if (saveUser(user)) {
+            if (saveEditedUser(draftUser)) {
               navigation.goBack();
             }
           }}
         />
       ),
     });
-  }, [saveUser, navigation, user]);
+  }, [saveEditedUser, navigation, draftUser]);
 
   const writeValue = useCallback(
     (value: any, path: string, u: User) => {
       const updatedUser = set(path, value)(u);
-      setUser(updatedUser);
+      setDraftUser(updatedUser);
     },
-    [setUser],
+    [setDraftUser],
   );
 
   const onFullNameChange = (name: FullName) => {
-    writeValue(name, 'name', user);
+    writeValue(name, 'name', draftUser);
   };
 
   const onLocationChange = (location: Location) => {
-    writeValue(location, 'location', user);
+    writeValue(location, 'location', draftUser);
   };
 
   const handleChooseAvatar = useCallback(
@@ -136,42 +128,44 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
       style={styles.container}
       keyboardVerticalOffset={useHeaderHeight() + 20}>
       <ScrollView style={styles.detailsContainer}>
-        <Image source={{uri: user.picture?.large}} style={styles.avatar} />
+        <Image source={{uri: draftUser.picture?.large}} style={styles.avatar} />
         <Button
           title="Choose Avatar"
-          onPress={() => handleChooseAvatar(user)}
+          onPress={() => handleChooseAvatar(draftUser)}
         />
-        <FullNameInput name={user.name} onChange={onFullNameChange} />
+        <FullNameInput name={draftUser.name} onChange={onFullNameChange} />
         <GenderPicker
           label="Gender"
-          value={user.gender}
-          onValueChange={val => writeValue(val, 'gender', user)}
+          value={draftUser.gender}
+          onValueChange={val => writeValue(val, 'gender', draftUser)}
         />
         <BirthDatePicker
           label="Birth Date:"
-          value={user.dob?.date ? new Date(user.dob.date) : new Date()}
+          value={
+            draftUser.dob?.date ? new Date(draftUser.dob.date) : new Date()
+          }
           onChange={(event, val) =>
-            writeValue(new Date(val).toISOString(), 'dob.date', user)
+            writeValue(new Date(val).toISOString(), 'dob.date', draftUser)
           }
         />
         <StringInput
           label="Email:"
-          value={user.email}
-          onChangeText={val => writeValue(val, 'email', user)}
+          value={draftUser.email}
+          onChangeText={val => writeValue(val, 'email', draftUser)}
         />
         <StringInput
           label="Phone:"
-          value={user.phone}
-          onChangeText={val => writeValue(val, 'phone', user)}
+          value={draftUser.phone}
+          onChangeText={val => writeValue(val, 'phone', draftUser)}
         />
         <StringInput
           label="Cellphone:"
-          value={user.cell}
-          onChangeText={val => writeValue(val, 'cell', user)}
+          value={draftUser.cell}
+          onChangeText={val => writeValue(val, 'cell', draftUser)}
         />
         <LocationInput
           label="Location:"
-          location={user.location}
+          location={draftUser.location}
           onChange={onLocationChange}
         />
       </ScrollView>
@@ -179,4 +173,23 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   );
 };
 
-export default AddUserScreen;
+const EditUserScreen = ({navigation, route}: EditUserScreenProps): Node => {
+  const {id} = route.params;
+  const retrievedUser: ?User = useSelector((state: UserState) =>
+    state.users.find(u => u.id === id),
+  );
+
+  if (retrievedUser == null) {
+    return <Text>Error when trying to display the user with ID: {id}!</Text>;
+  } else {
+    return (
+      <EditUserPanel
+        user={retrievedUser}
+        navigation={navigation}
+        route={route}
+      />
+    );
+  }
+};
+
+export default EditUserScreen;

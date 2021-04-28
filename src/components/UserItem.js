@@ -37,7 +37,7 @@ const UserItem = ({
     underlayColor="#DDDDDD"
     onPress={() =>
       navigation.navigate('UserDetails', {
-        userEmail: user.email,
+        id: user.id,
       })
     }>
     <View style={styles.userContainer}>
@@ -55,8 +55,8 @@ const UserItem = ({
         />
         {user.location && (
           <Location
-            streetName={user.location.street.name}
-            streetNum={user.location.street.number}
+            streetName={user.location.street?.name}
+            streetNum={user.location.street?.number}
             city={user.location.city}
             state={user.location.state}
             postcode={user.location.postcode}

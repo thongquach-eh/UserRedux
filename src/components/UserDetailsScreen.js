@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import {View, Text, StyleSheet, Image, Linking} from 'react-native';
+import {View, Text, StyleSheet, Image, Linking, Button} from 'react-native';
 import FullName from './FullName';
 import Phone from './Phone';
 import Email from './Email';
@@ -63,17 +63,28 @@ const UserDetailsScreen = ({
   navigation,
   route,
 }: UserDetailsScreenProps): React.Node => {
-  const {userEmail}: {userEmail: string} = route.params;
+  const {id} = route.params;
   const user: ?User = useSelector((state: UserState) =>
-    state.users.find(u => u.email === userEmail),
+    state.users.find(u => u.id === id),
   );
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Edit"
+          onPress={() =>
+            navigation.navigate('EditUser', {
+              id: user?.id || '',
+            })
+          }
+        />
+      ),
+    });
+  }, [navigation, user?.id]);
+
   if (user == null) {
-    return (
-      <Text>
-        Error when trying to display the user with email: {userEmail}!
-      </Text>
-    );
+    return <Text>Error when trying to display the user with ID: {id}!</Text>;
   }
 
   const name = user.name;
@@ -95,13 +106,13 @@ const UserDetailsScreen = ({
         <Text style={styles.detailInfo}>{user.gender}</Text>
         <Text style={styles.detailLabel}>Email:</Text>
         <Email value={user.email} style={styles.detailInfo} />
-        {user.phone && <Text style={styles.detailLabel}>Phone:</Text>}
-        {user.phone && <Phone value={user.phone} style={styles.detailInfo} />}
+        <Text style={styles.detailLabel}>Phone:</Text>
+        <Phone value={user.phone || ''} style={styles.detailInfo} />
         <Text style={styles.detailLabel}>Location:</Text>
         {location && (
           <Location
-            streetName={location.street.name}
-            streetNum={location.street.number}
+            streetName={location.street?.name}
+            streetNum={location.street?.number}
             city={location.city}
             state={location.state}
             postcode={location.postcode}
