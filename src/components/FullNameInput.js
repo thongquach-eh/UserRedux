@@ -3,7 +3,7 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import StringInput from './StringInput';
 import TitlePicker from './TitlePicker';
-import type {User} from '../types.js';
+import type {FullName} from '../types.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,28 +13,28 @@ const styles = StyleSheet.create({
 });
 
 const FullNameInput = ({
-  user,
-  writeValue,
+  name,
+  onChange,
 }: {
-  user: User,
-  writeValue: (value: string | number, path: string, u: User) => void,
+  name: FullName,
+  onChange: (value: FullName) => mixed,
 }): React.Node => {
   return (
     <View style={styles.container}>
       <TitlePicker
         label="Title"
-        value={user.name.title}
-        onValueChange={val => writeValue(val, 'name.title', user)}
+        value={name.title}
+        onValueChange={val => onChange({...name, ['title']: val.toString()})}
       />
       <StringInput
         label="First name:"
-        value={user.name.first}
-        onChangeText={val => writeValue(val, 'name.first', user)}
+        value={name.first}
+        onChangeText={val => onChange({...name, ['first']: val})}
       />
       <StringInput
         label="Last name:"
-        value={user.name.last}
-        onChangeText={val => writeValue(val, 'name.last', user)}
+        value={name.last}
+        onChangeText={val => onChange({...name, ['last']: val})}
       />
     </View>
   );

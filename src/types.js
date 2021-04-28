@@ -10,21 +10,8 @@ export type RootStackParamList = {
 export type User = {
   +id: string,
   +gender: ?string,
-  +name: {
-    +title?: string,
-    +first: string,
-    +last: string,
-  },
-  +location?: {
-    +street: {
-      +number: ?number,
-      +name: ?string,
-    },
-    +city: ?string,
-    +state: ?string,
-    +country: ?string,
-    +postcode: number,
-  },
+  name: FullName,
+  location: Location,
   +email: string,
   +dob?: {
     +date: ?string,
@@ -37,6 +24,23 @@ export type User = {
     +medium: ?string,
     +thumbnail: ?string,
   },
+};
+
+export type FullName = {
+  +title?: string,
+  +first: string,
+  +last: string,
+};
+
+export type Location = {
+  +street?: {
+    +number?: ?number,
+    +name?: string,
+  },
+  +city?: string,
+  +state?: string,
+  +country?: string,
+  +postcode?: ?number,
 };
 
 export type UserState = {

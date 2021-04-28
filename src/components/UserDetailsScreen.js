@@ -111,8 +111,8 @@ const UserDetailsScreen = ({
         <Text style={styles.detailLabel}>Location:</Text>
         {location && (
           <Location
-            streetName={location.street.name}
-            streetNum={location.street.number}
+            streetName={location.street?.name}
+            streetNum={location.street?.number}
             city={location.city}
             state={location.state}
             postcode={location.postcode}

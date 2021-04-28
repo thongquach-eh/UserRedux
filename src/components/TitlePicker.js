@@ -31,7 +31,7 @@ const TitlePicker = ({
 }: {
   label: string,
   value: ?string,
-  onValueChange: ?(itemValue: string | number, itemIndex: number) => mixed,
+  onValueChange: ?(value: string | number, index: number) => mixed,
 }): React.Node => {
   return (
     <View style={styles.container}>

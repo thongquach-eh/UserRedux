@@ -21,6 +21,8 @@ import type {
   User,
   UserState,
   RootStackParamList,
+  FullName,
+  Location,
 } from '../types.js';
 import StringInput from './StringInput';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -93,6 +95,14 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
     [setDraftUser],
   );
 
+  const onFullNameChange = (name: FullName) => {
+    writeValue(name, 'name', draftUser);
+  };
+
+  const onLocationChange = (location: Location) => {
+    writeValue(location, 'location', draftUser);
+  };
+
   const handleChooseAvatar = useCallback(
     (u: User) => {
       const options = {
@@ -123,7 +133,7 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
           title="Choose Avatar"
           onPress={() => handleChooseAvatar(draftUser)}
         />
-        <FullNameInput user={draftUser} writeValue={writeValue} />
+        <FullNameInput name={draftUser.name} onChange={onFullNameChange} />
         <GenderPicker
           label="Gender"
           value={draftUser.gender}
@@ -155,8 +165,8 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
         />
         <LocationInput
           label="Location:"
-          user={draftUser}
-          writeValue={writeValue}
+          location={draftUser.location}
+          onChange={onLocationChange}
         />
       </ScrollView>
     </KeyboardAvoidingView>

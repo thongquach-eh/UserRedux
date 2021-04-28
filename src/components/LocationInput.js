@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import StringInput from './StringInput';
-import type {User} from '../types.js';
+import type {Location} from '../types.js';
 
 const styles = StyleSheet.create({
   label: {
@@ -16,14 +16,25 @@ const styles = StyleSheet.create({
 
 const LocationInput = ({
   label,
-  user,
-  writeValue,
+  location,
+  onChange,
 }: {
   label: string,
-  user: User,
-  writeValue: (value: string | number, path: string, u: User) => void,
+  location: Location,
+  onChange: (value: Location) => mixed,
 }): React.Node => {
-  const location = user.location;
+  if (!location) {
+    location = {
+      street: {
+        number: null,
+        name: '',
+      },
+      city: '',
+      state: '',
+      postcode: null,
+      country: '',
+    };
+  }
 
   return (
     <>
@@ -31,43 +42,51 @@ const LocationInput = ({
       <View style={styles.container}>
         <StringInput
           label="Number"
-          value={location?.street.number?.toString()}
-          onChangeText={(val: string) =>
-            writeValue(parseInt(val, 10), 'location.street.number', user)
+          value={location?.street?.number?.toString()}
+          onChangeText={val =>
+            onChange({
+              ...location,
+              street: {
+                ...location.street,
+                number: parseInt(val, 10),
+              },
+            })
           }
         />
         <StringInput
           label="Street"
-          value={location?.street.name}
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.street.name', user)
+          value={location?.street?.name}
+          onChangeText={val =>
+            onChange({
+              ...location,
+              street: {
+                ...location.street,
+                name: val,
+              },
+            })
           }
         />
         <StringInput
           label="City"
           value={location?.city}
-          onChangeText={(val: string) => writeValue(val, 'location.city', user)}
+          onChangeText={val => onChange({...location, ['city']: val})}
         />
         <StringInput
           label="State"
           value={location?.state}
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.state', user)
-          }
+          onChangeText={val => onChange({...location, ['state']: val})}
         />
         <StringInput
           label="Postcode"
-          value={location?.postcode.toString()}
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.postcode', user)
+          value={location?.postcode?.toString()}
+          onChangeText={val =>
+            onChange({...location, ['postcode']: parseInt(val, 10)})
           }
         />
         <StringInput
           label="Country"
           value={location?.country}
-          onChangeText={(val: string) =>
-            writeValue(val, 'location.country', user)
-          }
+          onChangeText={val => onChange({...location, ['country']: val})}
         />
       </View>
     </>

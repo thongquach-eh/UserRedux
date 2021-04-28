@@ -20,6 +20,8 @@ import type {
   User,
   UserState,
   RootStackParamList,
+  FullName,
+  Location,
 } from '../types.js';
 import StringInput from './StringInput';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -63,6 +65,7 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
     phone: '',
     cell: '',
     gender: '',
+    location: {},
   };
   const [user, setUser] = useState<User>(newUser);
 
@@ -100,6 +103,14 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
     [setUser],
   );
 
+  const onFullNameChange = (name: FullName) => {
+    writeValue(name, 'name', user);
+  };
+
+  const onLocationChange = (location: Location) => {
+    writeValue(location, 'location', user);
+  };
+
   const handleChooseAvatar = useCallback(
     (u: User) => {
       const options = {
@@ -130,7 +141,7 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
           title="Choose Avatar"
           onPress={() => handleChooseAvatar(user)}
         />
-        <FullNameInput user={user} writeValue={writeValue} />
+        <FullNameInput name={user.name} onChange={onFullNameChange} />
         <GenderPicker
           label="Gender"
           value={user.gender}
@@ -158,7 +169,11 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
           value={user.cell}
           onChangeText={val => writeValue(val, 'cell', user)}
         />
-        <LocationInput label="Location:" user={user} writeValue={writeValue} />
+        <LocationInput
+          label="Location:"
+          location={user.location}
+          onChange={onLocationChange}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
