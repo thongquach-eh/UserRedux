@@ -18,7 +18,7 @@ import {set} from 'lodash/fp';
 import type {
   UserDispatch,
   User,
-  UserState,
+  RootState,
   RootStackParamList,
   FullName,
   Location,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 
 const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
-  const users = useSelector((state: UserState) => state.users);
+  const users = useSelector((state: RootState) => state.user.users);
   const newUser = {
     id: uuidv4(),
     name: {

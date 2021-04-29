@@ -11,11 +11,21 @@ import {
   EditUserScreen,
 } from './components/index';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
 import usersReducer from './UsersReducer';
+import {
+  reducers as apiReducers,
+  middleware as apiMiddleware,
+} from 'redux-api-call';
 
 const Stack = createStackNavigator();
-const store = createStore(usersReducer);
+
+const rootReducer = combineReducers({
+  user: usersReducer,
+  ...apiReducers,
+});
+const middlewares = applyMiddleware(apiMiddleware);
+const store = createStore(rootReducer, {}, middlewares);
 
 function App(): React.Node {
   return (

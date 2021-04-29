@@ -19,7 +19,7 @@ import {set} from 'lodash/fp';
 import type {
   UserDispatch,
   User,
-  UserState,
+  RootState,
   RootStackParamList,
   FullName,
   Location,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 
 const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
   const dispatch = useDispatch<UserDispatch>();
-  const users = useSelector((state: UserState) => state.users);
+  const users = useSelector((state: RootState) => state.user.users);
   const [draftUser, setDraftUser] = useState<User>(user);
 
   const saveEditedUser = useCallback(
@@ -175,8 +175,8 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
 
 const EditUserScreen = ({navigation, route}: EditUserScreenProps): Node => {
   const {id} = route.params;
-  const retrievedUser: ?User = useSelector((state: UserState) =>
-    state.users.find(u => u.id === id),
+  const retrievedUser: ?User = useSelector((state: RootState) =>
+    state.user.users.find(u => u.id === id),
   );
 
   if (retrievedUser == null) {

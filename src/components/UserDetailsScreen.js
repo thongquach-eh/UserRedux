@@ -7,7 +7,7 @@ import Email from './Email';
 import Location from './Location';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import type {RootStackParamList, UserState, User} from '../types.js';
+import type {RootStackParamList, RootState, User} from '../types.js';
 import {useSelector} from 'react-redux';
 
 const styles = StyleSheet.create({
@@ -64,8 +64,8 @@ const UserDetailsScreen = ({
   route,
 }: UserDetailsScreenProps): React.Node => {
   const {id} = route.params;
-  const user: ?User = useSelector((state: UserState) =>
-    state.users.find(u => u.id === id),
+  const user: ?User = useSelector((state: RootState) =>
+    state.user.users.find(u => u.id === id),
   );
 
   React.useLayoutEffect(() => {
