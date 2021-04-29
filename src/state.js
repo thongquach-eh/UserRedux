@@ -5,6 +5,7 @@ export const {
   dataSelector: fetchUsersResponseSelector,
   isFetchingSelector: isFetchingUsersSelector,
   actionCreator: fetchUsersAC,
+  errorSelector: fetchUsersErrorSelector,
 } = makeFetchAction('FETCH_USERS', () => ({
   endpoint: 'https://randomuser.me/api/?results=25',
   method: 'GET',
