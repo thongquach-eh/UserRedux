@@ -17,15 +17,21 @@ import {
   reducers as apiReducers,
   middleware as apiMiddleware,
 } from 'redux-api-call';
+import {combineEpics, createEpicMiddleware} from 'redux-observable';
+import usersEpic from './UsersEpic';
 
-const Stack = createStackNavigator();
+const rootEpic = combineEpics(usersEpic);
+const epicMiddleware = createEpicMiddleware();
+const middlewares = applyMiddleware(apiMiddleware, epicMiddleware);
 
 const rootReducer = combineReducers({
   user: usersReducer,
   ...apiReducers,
 });
-const middlewares = applyMiddleware(apiMiddleware);
+
 const store = createStore(rootReducer, {}, middlewares);
+epicMiddleware.run(rootEpic);
+const Stack = createStackNavigator();
 
 function App(): React.Node {
   return (

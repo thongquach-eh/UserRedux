@@ -10,21 +10,14 @@ import {
 } from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import type {
-  RootState,
-  RootStackParamList,
-  UserDispatch,
-  User,
-} from '../types.js';
+import type {RootState, RootStackParamList, UserDispatch} from '../types.js';
 import {useSelector, useDispatch} from 'react-redux';
 import UserItem from './UserItem';
 import {
   fetchUsersAC,
   isFetchingUsersSelector,
-  fetchUsersSelector,
   fetchUsersErrorSelector,
 } from '../state.js';
-import {addUsers} from '../UsersAction';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,18 +42,11 @@ const UserListScreen = ({
   const users = useSelector((state: RootState) => state.user.users);
   const dispatch = useDispatch<UserDispatch>();
   const isFetching = useSelector<RootState, boolean>(isFetchingUsersSelector);
-  const fetchedUsers = useSelector<RootState, User[]>(fetchUsersSelector);
   const fetchUsersError = useSelector<RootState, any>(fetchUsersErrorSelector);
 
   React.useEffect(() => {
     dispatch(fetchUsersAC());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    if (!isFetching && !fetchUsersError) {
-      dispatch(addUsers(fetchedUsers));
-    }
-  }, [dispatch, fetchedUsers, isFetching, fetchUsersError]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
