@@ -1798,6 +1798,14 @@ babel-preset-jest@^26.6.2:
     babel-plugin-jest-hoist "^26.6.2"
     babel-preset-current-node-syntax "^1.0.0"
 
+babel-runtime@^6.26.0:
+  version "6.26.0"
+  resolved "https://registry.npmjs.org/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -2215,6 +2223,11 @@ core-js-compat@^3.9.1:
   dependencies:
     browserslist "^4.16.3"
     semver "7.0.0"
+
+core-js@^2.4.0:
+  version "2.6.12"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
+  integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -5574,6 +5587,35 @@ rechoir@^0.6.2:
   dependencies:
     resolve "^1.1.6"
 
+redux-api-call-adapter-dedupe@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/redux-api-call-adapter-dedupe/-/redux-api-call-adapter-dedupe-1.1.1.tgz#ce266b7041aa0c21357988d9a034148a5ce74566"
+  integrity sha512-nmBQznIKh9L+fP+s9zuhjN+NB4W/Qm7kevxxKYVjObCQf/haG0MumDZal0rfMb3k6UUO8SdipWgQjrBR4pTp5g==
+
+redux-api-call-adapter-fetch@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/redux-api-call-adapter-fetch/-/redux-api-call-adapter-fetch-1.1.1.tgz#0a226f73f1b93c666a44e42b6e3b81dd3c73a969"
+  integrity sha512-wj52AJGSkZM7B5cf0MAw1Q3MASPS5rHW/XhqxpTHLpKfYsYn9g3c2wLVXjgOloaMrCDHbyLMhDuzzXx34WL01A==
+
+redux-api-call-adapter-json@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/redux-api-call-adapter-json/-/redux-api-call-adapter-json-1.1.1.tgz#529301335cc14f87e6df23046c95eddd5c5ae293"
+  integrity sha512-2TrfyzshvFR+sr7nPE7QR6Iqu/gu5CDonNdnR3X7tOZDuZZ4SESqG0vbneQfifaM4GoB2OVdyPNJLY+VJaZ8zQ==
+
+redux-api-call@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/redux-api-call/-/redux-api-call-1.2.1.tgz#076859bf311077e91d6f11ce4f92742b01133d95"
+  integrity sha512-Qb3mRnxS5g3zRrY7rTfaLq3vXcpikeFueaImU/J0HRnT9Gjy/aWzYrMi0ZrUwsKiBBukQQO4h5OzJV+tqYRxOQ==
+  dependencies:
+    redux-api-call-adapter-dedupe "^1.1.1"
+    redux-api-call-adapter-fetch "^1.1.1"
+    redux-api-call-adapter-json "^1.1.1"
+
+redux-observable@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/redux-observable/-/redux-observable-1.2.0.tgz#ff51b6c6be2598e9b5e89fc36639186bb0e669c7"
+  integrity sha512-yeR90RP2WzZzCxxnQPlh2uFzyfFLsfXu8ROh53jGDPXVqj71uNDMmvi/YKQkd9ofiVoO4OYb1snbowO49tCEMg==
+
 redux@^4.0.0, redux@^4.0.5:
   version "4.0.5"
   resolved "https://registry.npmjs.org/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
@@ -5593,6 +5635,11 @@ regenerate@^1.4.0:
   version "1.4.2"
   resolved "https://registry.npmjs.org/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
+
+regenerator-runtime@^0.11.0:
+  version "0.11.1"
+  resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+  integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
 
 regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.4:
   version "0.13.7"
@@ -5804,6 +5851,13 @@ rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.npmjs.org/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
+
+rxjs@6.6.7:
+  version "6.6.7"
+  resolved "https://registry.npmjs.org/rxjs/-/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
+  integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
@@ -6488,7 +6542,7 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
-tslib@^1.8.1:
+tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==

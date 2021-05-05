@@ -1,15 +1,19 @@
 //@flow
 import userArray from '../data/users.json';
-import type {UserState, UserAction} from './types.js';
+import type {UserState, UserAction, User} from './types.js';
 import _ from 'lodash';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
-const initialState = {
-  users: userArray.map(u => ({
+const generateIds = (users: User[]): User[] => {
+  return users.map(u => ({
     ...u,
     id: uuidv4(),
-  })),
+  }));
+};
+
+const initialState = {
+  users: generateIds(userArray),
 };
 
 const usersReducer = (
@@ -21,6 +25,12 @@ const usersReducer = (
       return {
         ...state,
         users: [...state.users, action.newUser],
+      };
+
+    case 'ADD_USERS':
+      return {
+        ...state,
+        users: state.users.concat(generateIds(action.newUsers)),
       };
 
     case 'EDIT_USER':

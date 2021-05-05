@@ -43,15 +43,24 @@ export type Location = {
   +postcode?: ?number,
 };
 
+export type RootState = {
+  user: UserState,
+};
+
 export type UserState = {
   +users: Array<User>,
 };
 
-export type UserAction = AddUserAction | EditUserAction;
+export type UserAction = AddUserAction | EditUserAction | AddUsersAction;
 
 export type AddUserAction = {
   type: 'ADD_USER',
   newUser: User,
+};
+
+export type AddUsersAction = {
+  type: 'ADD_USERS',
+  newUsers: User[],
 };
 
 export type EditUserAction = {
