@@ -5,18 +5,22 @@ import {map, filter} from 'rxjs/operators';
 import {addUsers} from './UsersAction';
 import {combineEpics} from 'redux-observable';
 import {fetchUsersAC} from './state.js';
+import type {Action} from 'redux';
+import {Observable} from 'rxjs';
+
+let fetchUsersNetworkFails: number = 0;
 
 const fetchUsersCompleteEpic = action$ =>
   action$.pipe(
     ofType(ACTIONS.COMPLETE),
     filter(action => action.payload.name === 'FETCH_USERS'),
     map(({payload}) => {
+      fetchUsersNetworkFails = 0;
       const fetchedUsers = payload.json.results || [];
       return addUsers(fetchedUsers);
     }),
   );
 
-let fetchUsersNetworkFails: number = 0;
 const fetchUsersNetworkFailureEpic = action$ =>
   action$.pipe(
     ofType(ACTIONS.FAILURE),
