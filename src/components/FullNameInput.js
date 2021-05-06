@@ -3,7 +3,7 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import StringInput from './StringInput';
 import TitlePicker from './TitlePicker';
-import type {FullName} from '../types.js';
+import {Field} from 'redux-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,29 +12,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const FullNameInput = ({
-  name,
-  onChange,
-}: {
-  name: FullName,
-  onChange: (value: FullName) => mixed,
-}): React.Node => {
+const FullNameInput = (): React.Node => {
   return (
     <View style={styles.container}>
-      <TitlePicker
-        label="Title"
-        value={name.title}
-        onValueChange={val => onChange({...name, ['title']: val.toString()})}
+      <Field
+        name="name.title"
+        component={TitlePicker}
+        props={{label: 'Title:'}}
       />
-      <StringInput
-        label="First name:"
-        value={name.first}
-        onChangeText={val => onChange({...name, ['first']: val})}
+      <Field
+        name="name.first"
+        component={StringInput}
+        props={{label: 'First name:'}}
       />
-      <StringInput
-        label="Last name:"
-        value={name.last}
-        onChangeText={val => onChange({...name, ['last']: val})}
+      <Field
+        name="name.last"
+        component={StringInput}
+        props={{label: 'Last name:'}}
       />
     </View>
   );

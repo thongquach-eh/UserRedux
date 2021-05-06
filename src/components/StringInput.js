@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import {StyleSheet, TextInput, Text, View} from 'react-native';
+import type {FieldProps} from 'redux-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,23 +22,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const StringInput = ({
-  label,
-  value,
-  onChangeText,
-}: {
+type StringInputProps = {
+  ...FieldProps,
   label: string,
-  value?: ?string,
-  onChangeText?: ?(text: string) => mixed,
-}): React.Node => {
+};
+
+const StringInput = (props: StringInputProps): React.Node => {
+  const {
+    input: {value, onChange},
+    label,
+  } = props;
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={styles.value}
-        value={value}
-        onChangeText={onChangeText}
-      />
+      <TextInput style={styles.value} value={value} onChangeText={onChange} />
     </View>
   );
 };
