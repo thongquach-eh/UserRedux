@@ -27,7 +27,8 @@ const LocationInput = (props: LocationInputProps): React.Node => {
       <View style={styles.container}>
         <Field
           name="location.street.number"
-          parse={value => Number(value)}
+          parse={(value: string) => Number(value)}
+          format={(value: ?number) => (value ? value.toString() : '')}
           component={StringInput}
           props={{label: 'Number:'}}
         />
@@ -48,7 +49,8 @@ const LocationInput = (props: LocationInputProps): React.Node => {
         />
         <Field
           name="location.postcode"
-          parse={value => Number(value)}
+          parse={(value: string) => Number(value)}
+          format={(value: ?number) => (value ? value.toString() : '')}
           component={StringInput}
           props={{label: 'Postcode:'}}
         />

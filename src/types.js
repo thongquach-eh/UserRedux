@@ -4,7 +4,7 @@ export type RootStackParamList = {
   UserList: typeof undefined,
   UserDetails: {id: string},
   AddUser: typeof undefined,
-  EditUser: {id: string},
+  EditUser: {user: User},
 };
 
 export type User = {
@@ -51,7 +51,16 @@ export type UserState = {
   +users: Array<User>,
 };
 
-export type UserAction = AddUserAction | EditUserAction | AddUsersAction;
+export type UserAction =
+  | PressAddUserAction
+  | AddUserAction
+  | PressEditUserAction
+  | EditUserAction
+  | AddUsersAction;
+
+export type PressAddUserAction = {
+  type: 'PRESS_ADD_USER',
+};
 
 export type AddUserAction = {
   type: 'ADD_USER',
@@ -61,6 +70,10 @@ export type AddUserAction = {
 export type AddUsersAction = {
   type: 'ADD_USERS',
   newUsers: User[],
+};
+
+export type PressEditUserAction = {
+  type: 'PRESS_EDIT_USER',
 };
 
 export type EditUserAction = {

@@ -1,20 +1,12 @@
 //@flow
 import type {User} from '../types.js';
 
-export const validateUser = (u: User, users: User[]): boolean => {
-  if (u.email === '') {
-    // eslint-disable-next-line no-alert
-    alert('Email address cannot be empty.');
-    return false;
+export const validateUser = (user: User): Object => {
+  const errors = {};
+  if (!user?.email) {
+    errors.email = 'Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(user.email)) {
+    errors.email = 'Invalid email address';
   }
-
-  for (var otherUser of users) {
-    if (otherUser.email === u.email && otherUser.id !== u.id) {
-      // eslint-disable-next-line no-alert
-      alert('This email address has already been used.');
-      return false;
-    }
-  }
-
-  return true;
+  return errors;
 };

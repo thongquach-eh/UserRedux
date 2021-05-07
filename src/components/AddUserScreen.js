@@ -4,7 +4,6 @@ import type {Node} from 'react';
 import {
   Button,
   StyleSheet,
-  Image,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -12,59 +11,47 @@ import {
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../UsersAction';
-import type {
-  UserDispatch,
-  User,
-  RootState,
-  RootStackParamList,
-} from '../types.js';
+import {useDispatch} from 'react-redux';
+import {pressAddUser} from '../UsersAction';
+import type {UserDispatch, RootStackParamList} from '../types.js';
 import StringInput from './StringInput';
-import {launchImageLibrary} from 'react-native-image-picker';
 import 'react-native-get-random-values';
-import {validateUser} from './Validations';
+import {validateUser} from './Validations.js';
 import GenderPicker from './GenderPicker';
 import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';
 import FullNameInput from './FullNameInput';
-import {reduxForm, Field, getFormValues, change} from 'redux-form';
+import PictureInput from './PictureInput';
+import {reduxForm, Field} from 'redux-form';
+import type {FormProps} from 'redux-form';
 
 type AddUserScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddUser'>,
   route: RouteProp<RootStackParamList, 'AddUser'>,
-};
+} & FormProps;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  avatar: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
   },
   detailsContainer: {
     margin: 10,
   },
 });
 
-const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
+const AddUserScreen = (props: AddUserScreenProps): Node => {
+  const {navigation, valid} = props;
   const dispatch = useDispatch<UserDispatch>();
-  const users = useSelector((state: RootState) => state.user.users);
-  const rootState = useSelector((state: RootState) => state);
-  const user = getFormValues('addUser')(rootState);
 
-  const saveUser = useCallback(
-    u => {
-      if (validateUser(u, users)) {
-        dispatch(addUser(u));
-        return true;
-      }
-      return false;
-    },
-    [dispatch, users],
-  );
+  const saveUser = useCallback(() => {
+    if (valid) {
+      dispatch(pressAddUser());
+      return true;
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('The form is invalid. Please recheck the entered data.');
+    }
+  }, [dispatch, valid]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -72,33 +59,14 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
         <Button
           title="Save"
           onPress={() => {
-            if (saveUser(user)) {
+            if (saveUser()) {
               navigation.goBack();
             }
           }}
         />
       ),
     });
-  }, [saveUser, navigation, user]);
-
-  const handleChooseAvatar = useCallback(
-    (u: User) => {
-      const options = {
-        noData: true,
-      };
-      launchImageLibrary(options, response => {
-        if (response.uri) {
-          const picture = {
-            large: response.uri,
-            medium: response.uri,
-            thumbnail: response.uri,
-          };
-          dispatch(change('addUser', 'picture', picture));
-        }
-      });
-    },
-    [dispatch],
-  );
+  }, [saveUser, navigation]);
 
   return (
     <KeyboardAvoidingView
@@ -106,10 +74,10 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
       style={styles.container}
       keyboardVerticalOffset={useHeaderHeight() + 20}>
       <ScrollView style={styles.detailsContainer}>
-        <Image source={{uri: user?.picture?.large}} style={styles.avatar} />
-        <Button
-          title="Choose Avatar"
-          onPress={() => handleChooseAvatar(user)}
+        <Field
+          name="picture"
+          component={PictureInput}
+          props={{label: 'Choose picture'}}
         />
         <FullNameInput />
         <Field
@@ -131,4 +99,6 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
   );
 };
 
-export default reduxForm({form: 'addUser'})(AddUserScreen);
+export default reduxForm({form: 'addUser', validate: validateUser})(
+  AddUserScreen,
+);
