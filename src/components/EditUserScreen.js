@@ -1,5 +1,5 @@
 // @flow
-import React, {useLayoutEffect, useCallback, useEffect} from 'react';
+import React, {useLayoutEffect, useCallback} from 'react';
 import type {Node} from 'react';
 import {
   Button,
@@ -11,7 +11,7 @@ import {
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {useDispatch} from 'react-redux';
+import {useDispatch, connect} from 'react-redux';
 import {pressEditUser} from '../UsersAction';
 import type {UserDispatch, RootStackParamList} from '../types.js';
 import StringInput from './StringInput';
@@ -22,7 +22,7 @@ import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';
 import FullNameInput from './FullNameInput';
 import PictureInput from './PictureInput';
-import {reduxForm, Field, initialize} from 'redux-form';
+import {reduxForm, Field} from 'redux-form';
 import type {FormProps} from 'redux-form';
 
 type EditUserScreenProps = {
@@ -39,14 +39,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const EditUserScreen = (props: EditUserScreenProps): Node => {
-  const {navigation, route, valid} = props;
-  const {user} = route.params;
+let EditUserScreen = (props: EditUserScreenProps): Node => {
+  const {navigation, valid} = props;
   const dispatch = useDispatch<UserDispatch>();
-
-  useEffect(() => {
-    dispatch(initialize('editUser', user));
-  }, [dispatch, user]);
 
   const saveEditedUser = useCallback(() => {
     if (valid) {
@@ -104,6 +99,11 @@ const EditUserScreen = (props: EditUserScreenProps): Node => {
   );
 };
 
-export default reduxForm({form: 'editUser', validate: validateUser})(
-  EditUserScreen,
-);
+EditUserScreen = reduxForm({
+  form: 'editUser',
+  validate: validateUser,
+})(EditUserScreen);
+
+export default connect((state, ownProps) => ({
+  initialValues: ownProps ? ownProps.route.params.user : {},
+}))(EditUserScreen);
