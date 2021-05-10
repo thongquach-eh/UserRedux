@@ -1,7 +1,7 @@
 //@flow
 import {ofType, combineEpics} from 'redux-observable';
 import {ACTIONS} from 'redux-api-call';
-import {map, filter, tap} from 'rxjs/operators';
+import {map, filter, tap, flatMap} from 'rxjs/operators';
 import {
   addUsers,
   addUser,
@@ -17,8 +17,8 @@ let fetchUsersNetworkFails: number = 0;
 const startFetchingEpic = action$ =>
   action$.pipe(
     ofType('START_FETCHING'),
-    map(async action => {
-      const desiredAction = await cacheOrExecute(action.apiName);
+    flatMap(async action => {
+      const desiredAction = cacheOrExecute(action.apiName);
       return desiredAction;
     }),
   );
