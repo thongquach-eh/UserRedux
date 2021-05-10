@@ -2,16 +2,15 @@
 import {addUsers, noAction} from './UsersAction';
 import {fetchUsersAC} from './state';
 import type {UserAction} from './types';
-import userArray from '../data/users.json';
 import {AsyncStorage} from 'react-native';
 
 const CACHE_TIMEOUT_PERIOD = 60; // in seconds
 
-export const cacheOrExecute = async (apiName: string) => {
+export const cacheOrExecute = async (apiName: string): Promise<UserAction> => {
   const cachedAction = await getCache(apiName);
 
   switch (apiName) {
-    case 'START_FETCH_USERS':
+    case 'FETCH_USERS':
       if (cachedAction) {
         return addUsers(cachedAction.data.results);
       } else {
@@ -33,7 +32,7 @@ const isCacheTimeout = (cachedDate: string): boolean => {
   return storedTime > CACHE_TIMEOUT_PERIOD;
 };
 
-const getCache = async (apiName: string) => {
+const getCache = async (apiName: string): boolean | Object => {
   const cachedAction = await AsyncStorage.getItem(apiName);
 
   if (cachedAction == null || isCacheTimeout(cachedAction.meta.date)) {

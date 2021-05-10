@@ -18,7 +18,6 @@ const startFetchingEpic = action$ =>
   action$.pipe(
     ofType('START_FETCHING'),
     map(async action => {
-      console.log(action);
       const desiredAction = await cacheOrExecute(action.apiName);
       return desiredAction;
     }),
