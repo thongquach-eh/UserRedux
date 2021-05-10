@@ -1,10 +1,9 @@
 // @flow
-import React, {useLayoutEffect, useState, useCallback} from 'react';
+import React, {useLayoutEffect, useCallback} from 'react';
 import type {Node} from 'react';
 import {
   Button,
   StyleSheet,
-  Image,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -12,73 +11,47 @@ import {
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../UsersAction';
-import {set} from 'lodash/fp';
-import type {
-  UserDispatch,
-  User,
-  RootState,
-  RootStackParamList,
-  FullName,
-  Location,
-} from '../types.js';
+import {useDispatch} from 'react-redux';
+import {pressAddUser} from '../UsersAction';
+import type {UserDispatch, RootStackParamList} from '../types.js';
 import StringInput from './StringInput';
-import {launchImageLibrary} from 'react-native-image-picker';
 import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
-import {validateUser} from './Validations';
+import {validateUser} from './Validations.js';
 import GenderPicker from './GenderPicker';
 import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';
 import FullNameInput from './FullNameInput';
+import PictureInput from './PictureInput';
+import {reduxForm, Field} from 'redux-form';
+import type {FormProps} from 'redux-form';
 
 type AddUserScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'AddUser'>,
   route: RouteProp<RootStackParamList, 'AddUser'>,
-};
+} & FormProps;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  avatar: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
   },
   detailsContainer: {
     margin: 10,
   },
 });
 
-const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
+const AddUserScreen = (props: AddUserScreenProps): Node => {
+  const {navigation, valid} = props;
   const dispatch = useDispatch<UserDispatch>();
-  const users = useSelector((state: RootState) => state.user.users);
-  const newUser = {
-    id: uuidv4(),
-    name: {
-      first: '',
-      last: '',
-    },
-    email: '',
-    phone: '',
-    cell: '',
-    gender: '',
-    location: {},
-  };
-  const [user, setUser] = useState<User>(newUser);
 
-  const saveUser = useCallback(
-    u => {
-      if (validateUser(u, users)) {
-        dispatch(addUser(u));
-        return true;
-      }
-      return false;
-    },
-    [dispatch, users],
-  );
+  const saveUser = useCallback(() => {
+    if (valid) {
+      dispatch(pressAddUser());
+      return true;
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('The form is invalid. Please recheck the entered data.');
+    }
+  }, [dispatch, valid]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -86,49 +59,14 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
         <Button
           title="Save"
           onPress={() => {
-            if (saveUser(user)) {
+            if (saveUser()) {
               navigation.goBack();
             }
           }}
         />
       ),
     });
-  }, [saveUser, navigation, user]);
-
-  const writeValue = useCallback(
-    (value: any, path: string, u: User) => {
-      const updatedUser = set(path, value)(u);
-      setUser(updatedUser);
-    },
-    [setUser],
-  );
-
-  const onFullNameChange = (name: FullName) => {
-    writeValue(name, 'name', user);
-  };
-
-  const onLocationChange = (location: Location) => {
-    writeValue(location, 'location', user);
-  };
-
-  const handleChooseAvatar = useCallback(
-    (u: User) => {
-      const options = {
-        noData: true,
-      };
-      launchImageLibrary(options, response => {
-        if (response.uri) {
-          const picture = {
-            large: response.uri,
-            medium: response.uri,
-            thumbnail: response.uri,
-          };
-          writeValue(picture, 'picture', u);
-        }
-      });
-    },
-    [writeValue],
-  );
+  }, [saveUser, navigation]);
 
   return (
     <KeyboardAvoidingView
@@ -136,47 +74,31 @@ const AddUserScreen = ({navigation, route}: AddUserScreenProps): Node => {
       style={styles.container}
       keyboardVerticalOffset={useHeaderHeight() + 20}>
       <ScrollView style={styles.detailsContainer}>
-        <Image source={{uri: user.picture?.large}} style={styles.avatar} />
-        <Button
-          title="Choose Avatar"
-          onPress={() => handleChooseAvatar(user)}
+        <Field
+          name="picture"
+          component={PictureInput}
+          props={{label: 'Choose picture'}}
         />
-        <FullNameInput name={user.name} onChange={onFullNameChange} />
-        <GenderPicker
-          label="Gender"
-          value={user.gender}
-          onValueChange={val => writeValue(val, 'gender', user)}
+        <FullNameInput />
+        <Field
+          name="gender"
+          component={GenderPicker}
+          props={{label: 'Gender:'}}
         />
-        <BirthDatePicker
-          label="Birth Date:"
-          value={user.dob?.date ? new Date(user.dob.date) : new Date()}
-          onChange={(event, val) =>
-            writeValue(new Date(val).toISOString(), 'dob.date', user)
-          }
+        <BirthDatePicker label="Birth Date:" />
+        <Field name="email" component={StringInput} props={{label: 'Email:'}} />
+        <Field name="phone" component={StringInput} props={{label: 'Phone:'}} />
+        <Field
+          name="cell"
+          component={StringInput}
+          props={{label: 'Cellphone:'}}
         />
-        <StringInput
-          label="Email:"
-          value={user.email}
-          onChangeText={val => writeValue(val, 'email', user)}
-        />
-        <StringInput
-          label="Phone:"
-          value={user.phone}
-          onChangeText={val => writeValue(val, 'phone', user)}
-        />
-        <StringInput
-          label="Cellphone:"
-          value={user.cell}
-          onChangeText={val => writeValue(val, 'cell', user)}
-        />
-        <LocationInput
-          label="Location:"
-          location={user.location}
-          onChange={onLocationChange}
-        />
+        <LocationInput label="Location:" />
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-export default AddUserScreen;
+export default reduxForm({form: 'addUser', validate: validateUser})(
+  AddUserScreen,
+);

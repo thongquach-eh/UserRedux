@@ -19,17 +19,24 @@ import {
 } from 'redux-api-call';
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import usersEpic from './UsersEpic';
+import {reducer as formReducer} from 'redux-form';
+import createDebugger from 'redux-flipper';
 
 const rootEpic = combineEpics(usersEpic);
 const epicMiddleware = createEpicMiddleware();
-const middlewares = applyMiddleware(apiMiddleware, epicMiddleware);
+const middlewares = [apiMiddleware, epicMiddleware];
+
+if (__DEV__) {
+  middlewares.push(createDebugger());
+}
 
 const rootReducer = combineReducers({
   user: usersReducer,
+  form: formReducer,
   ...apiReducers,
 });
 
-const store = createStore(rootReducer, {}, middlewares);
+const store = createStore(rootReducer, {}, applyMiddleware(...middlewares));
 epicMiddleware.run(rootEpic);
 const Stack = createStackNavigator();
 

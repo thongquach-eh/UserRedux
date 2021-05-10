@@ -1,5 +1,6 @@
 // @flow
-import * as React from 'react';
+import React, {useLayoutEffect, useCallback} from 'react';
+import type {Node} from 'react';
 import {View, Text, StyleSheet, Image, Linking, Button} from 'react-native';
 import FullName from './FullName';
 import Phone from './Phone';
@@ -62,29 +63,37 @@ const openMaps = location => {
 const UserDetailsScreen = ({
   navigation,
   route,
-}: UserDetailsScreenProps): React.Node => {
+}: UserDetailsScreenProps): Node => {
   const {id} = route.params;
+  const noUserMessage = `Error when trying to display the user with ID: ${id}!`;
   const user: ?User = useSelector((state: RootState) =>
     state.user.users.find(u => u.id === id),
   );
 
-  React.useLayoutEffect(() => {
+  const navigateToEditUserScreen = useCallback(
+    (editingUser: ?User): void => {
+      if (editingUser == null) {
+        // eslint-disable-next-line no-alert
+        alert(noUserMessage);
+      } else {
+        navigation.navigate('EditUser', {
+          user: editingUser,
+        });
+      }
+    },
+    [navigation, noUserMessage],
+  );
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          title="Edit"
-          onPress={() =>
-            navigation.navigate('EditUser', {
-              id: user?.id || '',
-            })
-          }
-        />
+        <Button title="Edit" onPress={() => navigateToEditUserScreen(user)} />
       ),
     });
-  }, [navigation, user?.id]);
+  }, [navigateToEditUserScreen, navigation, user]);
 
   if (user == null) {
-    return <Text>Error when trying to display the user with ID: {id}!</Text>;
+    return <Text>{noUserMessage}</Text>;
   }
 
   const name = user.name;

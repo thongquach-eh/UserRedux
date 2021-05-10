@@ -2,6 +2,8 @@
 import * as React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {Field} from 'redux-form';
+import type {FieldProps} from 'redux-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,19 +23,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const BirthDatePicker = ({
-  label,
-  value,
-  onChange,
-}: {
+const renderDatePicker = (props: FieldProps) => {
+  const {
+    input: {onChange, value},
+  } = props;
+
+  const onDateChange = (event, val) => {
+    onChange(val.toISOString());
+  };
+
+  return (
+    <DateTimePicker
+      value={value ? new Date(value) : new Date()}
+      style={styles.value}
+      onChange={(event, val) => onDateChange(event, val)}
+    />
+  );
+};
+
+type BirthDatePickerProps = {
   label: string,
-  value: ?Date,
-  onChange: ?(event: any, date: string) => mixed,
-}): React.Node => {
+};
+
+const BirthDatePicker = (props: BirthDatePickerProps): React.Node => {
+  const {label} = props;
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <DateTimePicker value={value} onChange={onChange} style={styles.value} />
+      <Field name="dob.date" component={renderDatePicker} />
     </View>
   );
 };

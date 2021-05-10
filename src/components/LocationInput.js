@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import StringInput from './StringInput';
-import type {Location} from '../types.js';
+import {Field} from 'redux-form';
 
 const styles = StyleSheet.create({
   label: {
@@ -14,79 +14,50 @@ const styles = StyleSheet.create({
   },
 });
 
-const LocationInput = ({
-  label,
-  location,
-  onChange,
-}: {
+type LocationInputProps = {
   label: string,
-  location: Location,
-  onChange: (value: Location) => mixed,
-}): React.Node => {
-  if (!location) {
-    location = {
-      street: {
-        number: null,
-        name: '',
-      },
-      city: '',
-      state: '',
-      postcode: null,
-      country: '',
-    };
-  }
+};
+
+const LocationInput = (props: LocationInputProps): React.Node => {
+  const {label} = props;
 
   return (
     <>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.container}>
-        <StringInput
-          label="Number"
-          value={location?.street?.number?.toString()}
-          onChangeText={val =>
-            onChange({
-              ...location,
-              street: {
-                ...location.street,
-                number: parseInt(val, 10),
-              },
-            })
-          }
+        <Field
+          name="location.street.number"
+          parse={(value: string) => Number(value)}
+          format={(value: ?number) => (value ? value.toString() : '')}
+          component={StringInput}
+          props={{label: 'Number:'}}
         />
-        <StringInput
-          label="Street"
-          value={location?.street?.name}
-          onChangeText={val =>
-            onChange({
-              ...location,
-              street: {
-                ...location.street,
-                name: val,
-              },
-            })
-          }
+        <Field
+          name="location.street.name"
+          component={StringInput}
+          props={{label: 'Street:'}}
         />
-        <StringInput
-          label="City"
-          value={location?.city}
-          onChangeText={val => onChange({...location, ['city']: val})}
+        <Field
+          name="location.city"
+          component={StringInput}
+          props={{label: 'City:'}}
         />
-        <StringInput
-          label="State"
-          value={location?.state}
-          onChangeText={val => onChange({...location, ['state']: val})}
+        <Field
+          name="location.state"
+          component={StringInput}
+          props={{label: 'State:'}}
         />
-        <StringInput
-          label="Postcode"
-          value={location?.postcode?.toString()}
-          onChangeText={val =>
-            onChange({...location, ['postcode']: parseInt(val, 10)})
-          }
+        <Field
+          name="location.postcode"
+          parse={(value: string) => Number(value)}
+          format={(value: ?number) => (value ? value.toString() : '')}
+          component={StringInput}
+          props={{label: 'Postcode:'}}
         />
-        <StringInput
-          label="Country"
-          value={location?.country}
-          onChangeText={val => onChange({...location, ['country']: val})}
+        <Field
+          name="location.country"
+          component={StringInput}
+          props={{label: 'Country:'}}
         />
       </View>
     </>

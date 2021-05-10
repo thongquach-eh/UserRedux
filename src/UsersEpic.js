@@ -1,10 +1,10 @@
 //@flow
-import {ofType} from 'redux-observable';
+import {ofType, combineEpics} from 'redux-observable';
 import {ACTIONS} from 'redux-api-call';
 import {map, filter, tap} from 'rxjs/operators';
-import {addUsers} from './UsersAction';
-import {combineEpics} from 'redux-observable';
+import {addUsers, addUser, editUser} from './UsersAction';
 import {fetchUsersAC} from './state.js';
+import {getFormValues} from 'redux-form';
 
 let fetchUsersNetworkFails: number = 0;
 
@@ -37,9 +37,29 @@ const fetchUsersNetworkFailureEpic = action$ =>
     }),
   );
 
+const pressAddUserEpic = (action$, state$) =>
+  action$.pipe(
+    ofType('PRESS_ADD_USER'),
+    map(() => {
+      const newUser = getFormValues('addUser')(state$.value);
+      return addUser(newUser);
+    }),
+  );
+
+const pressEditUserEpic = (action$, state$) =>
+  action$.pipe(
+    ofType('PRESS_EDIT_USER'),
+    map(() => {
+      const editedUser = getFormValues('editUser')(state$.value);
+      return editUser(editedUser);
+    }),
+  );
+
 const usersEpic = combineEpics(
   fetchUsersCompleteEpic,
   fetchUsersNetworkFailureEpic,
+  pressAddUserEpic,
+  pressEditUserEpic,
 );
 
 export default usersEpic;

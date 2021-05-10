@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
+import type {FieldProps} from 'redux-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,15 +25,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const GenderPicker = ({
-  label,
-  value,
-  onValueChange,
-}: {
+type GenderPickerProps = {
+  ...FieldProps,
   label: string,
-  value: ?string,
-  onValueChange: ?(value: string | number, index: number) => mixed,
-}): React.Node => {
+};
+
+const GenderPicker = (props: GenderPickerProps): React.Node => {
+  const {
+    input: {value, onChange},
+    label,
+  } = props;
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -40,7 +43,7 @@ const GenderPicker = ({
         style={styles.value}
         itemStyle={styles.pickerItem}
         selectedValue={value}
-        onValueChange={onValueChange}>
+        onValueChange={onChange}>
         <Picker.Item label="male" value="male" />
         <Picker.Item label="female" value="female" />
       </Picker>

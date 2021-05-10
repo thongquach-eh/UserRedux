@@ -1,11 +1,9 @@
 // @flow
-import React, {useLayoutEffect, useState, useCallback} from 'react';
+import React, {useLayoutEffect, useCallback} from 'react';
 import type {Node} from 'react';
 import {
-  Text,
   Button,
   StyleSheet,
-  Image,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -13,64 +11,47 @@ import {
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {useDispatch, useSelector} from 'react-redux';
-import {editUser} from '../UsersAction';
-import {set} from 'lodash/fp';
-import type {
-  UserDispatch,
-  User,
-  RootState,
-  RootStackParamList,
-  FullName,
-  Location,
-} from '../types.js';
+import {useDispatch, connect} from 'react-redux';
+import {pressEditUser} from '../UsersAction';
+import type {UserDispatch, RootStackParamList} from '../types.js';
 import StringInput from './StringInput';
-import {launchImageLibrary} from 'react-native-image-picker';
+import 'react-native-get-random-values';
 import {validateUser} from './Validations';
 import GenderPicker from './GenderPicker';
 import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';
 import FullNameInput from './FullNameInput';
+import PictureInput from './PictureInput';
+import {reduxForm, Field} from 'redux-form';
+import type {FormProps} from 'redux-form';
 
 type EditUserScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'EditUser'>,
   route: RouteProp<RootStackParamList, 'EditUser'>,
-};
-
-type EditUserPanelProps = {
-  ...EditUserScreenProps,
-  user: User,
-};
+} & FormProps;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  avatar: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
   },
   detailsContainer: {
     margin: 10,
   },
 });
 
-const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
+let EditUserScreen = (props: EditUserScreenProps): Node => {
+  const {navigation, valid} = props;
   const dispatch = useDispatch<UserDispatch>();
-  const users = useSelector((state: RootState) => state.user.users);
-  const [draftUser, setDraftUser] = useState<User>(user);
 
-  const saveEditedUser = useCallback(
-    u => {
-      if (validateUser(u, users)) {
-        dispatch(editUser(u));
-        return true;
-      }
-      return false;
-    },
-    [dispatch, users],
-  );
+  const saveEditedUser = useCallback(() => {
+    if (valid) {
+      dispatch(pressEditUser());
+      return true;
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('The form is invalid. Please recheck the entered data.');
+    }
+  }, [dispatch, valid]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -78,49 +59,14 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
         <Button
           title="Save"
           onPress={() => {
-            if (saveEditedUser(draftUser)) {
+            if (saveEditedUser()) {
               navigation.goBack();
             }
           }}
         />
       ),
     });
-  }, [saveEditedUser, navigation, draftUser]);
-
-  const writeValue = useCallback(
-    (value: any, path: string, u: User) => {
-      const updatedUser = set(path, value)(u);
-      setDraftUser(updatedUser);
-    },
-    [setDraftUser],
-  );
-
-  const onFullNameChange = (name: FullName) => {
-    writeValue(name, 'name', draftUser);
-  };
-
-  const onLocationChange = (location: Location) => {
-    writeValue(location, 'location', draftUser);
-  };
-
-  const handleChooseAvatar = useCallback(
-    (u: User) => {
-      const options = {
-        noData: true,
-      };
-      launchImageLibrary(options, response => {
-        if (response.uri) {
-          const picture = {
-            large: response.uri,
-            medium: response.uri,
-            thumbnail: response.uri,
-          };
-          writeValue(picture, 'picture', u);
-        }
-      });
-    },
-    [writeValue],
-  );
+  }, [saveEditedUser, navigation]);
 
   return (
     <KeyboardAvoidingView
@@ -128,68 +74,36 @@ const EditUserPanel = ({user, navigation, route}: EditUserPanelProps): Node => {
       style={styles.container}
       keyboardVerticalOffset={useHeaderHeight() + 20}>
       <ScrollView style={styles.detailsContainer}>
-        <Image source={{uri: draftUser.picture?.large}} style={styles.avatar} />
-        <Button
-          title="Choose Avatar"
-          onPress={() => handleChooseAvatar(draftUser)}
+        <Field
+          name="picture"
+          component={PictureInput}
+          props={{label: 'Choose picture'}}
         />
-        <FullNameInput name={draftUser.name} onChange={onFullNameChange} />
-        <GenderPicker
-          label="Gender"
-          value={draftUser.gender}
-          onValueChange={val => writeValue(val, 'gender', draftUser)}
+        <FullNameInput />
+        <Field
+          name="gender"
+          component={GenderPicker}
+          props={{label: 'Gender:'}}
         />
-        <BirthDatePicker
-          label="Birth Date:"
-          value={
-            draftUser.dob?.date ? new Date(draftUser.dob.date) : new Date()
-          }
-          onChange={(event, val) =>
-            writeValue(new Date(val).toISOString(), 'dob.date', draftUser)
-          }
+        <BirthDatePicker label="Birth Date:" />
+        <Field name="email" component={StringInput} props={{label: 'Email:'}} />
+        <Field name="phone" component={StringInput} props={{label: 'Phone:'}} />
+        <Field
+          name="cell"
+          component={StringInput}
+          props={{label: 'Cellphone:'}}
         />
-        <StringInput
-          label="Email:"
-          value={draftUser.email}
-          onChangeText={val => writeValue(val, 'email', draftUser)}
-        />
-        <StringInput
-          label="Phone:"
-          value={draftUser.phone}
-          onChangeText={val => writeValue(val, 'phone', draftUser)}
-        />
-        <StringInput
-          label="Cellphone:"
-          value={draftUser.cell}
-          onChangeText={val => writeValue(val, 'cell', draftUser)}
-        />
-        <LocationInput
-          label="Location:"
-          location={draftUser.location}
-          onChange={onLocationChange}
-        />
+        <LocationInput label="Location:" />
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-const EditUserScreen = ({navigation, route}: EditUserScreenProps): Node => {
-  const {id} = route.params;
-  const retrievedUser: ?User = useSelector((state: RootState) =>
-    state.user.users.find(u => u.id === id),
-  );
+EditUserScreen = reduxForm({
+  form: 'editUser',
+  validate: validateUser,
+})(EditUserScreen);
 
-  if (retrievedUser == null) {
-    return <Text>Error when trying to display the user with ID: {id}!</Text>;
-  } else {
-    return (
-      <EditUserPanel
-        user={retrievedUser}
-        navigation={navigation}
-        route={route}
-      />
-    );
-  }
-};
-
-export default EditUserScreen;
+export default connect((state, ownProps) => ({
+  initialValues: ownProps ? ownProps.route.params.user : {},
+}))(EditUserScreen);
