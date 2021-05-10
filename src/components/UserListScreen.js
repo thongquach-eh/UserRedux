@@ -10,14 +10,11 @@ import {
 } from 'react-native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
-import type {RootState, RootStackParamList, UserDispatch} from '../types.js';
+import type {RootState, RootStackParamList, UserDispatch} from '../types';
 import {useSelector, useDispatch} from 'react-redux';
 import UserItem from './UserItem';
-import {
-  fetchUsersAC,
-  isFetchingUsersSelector,
-  fetchUsersErrorSelector,
-} from '../state.js';
+import {isFetchingUsersSelector, fetchUsersErrorSelector} from '../state';
+import {startFetchUsers} from '../UsersAction';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +42,7 @@ const UserListScreen = ({
   const fetchUsersError = useSelector<RootState, any>(fetchUsersErrorSelector);
 
   React.useEffect(() => {
-    dispatch(fetchUsersAC());
+    dispatch(startFetchUsers());
   }, [dispatch]);
 
   React.useLayoutEffect(() => {
@@ -68,7 +65,7 @@ const UserListScreen = ({
         <Text style={styles.errorText}>
           An error occurred: {fetchUsersError.message}
         </Text>
-        <Button onPress={() => dispatch(fetchUsersAC())} title="Retry" />
+        <Button onPress={() => dispatch(startFetchUsers())} title="Retry" />
       </View>
     );
   } else {

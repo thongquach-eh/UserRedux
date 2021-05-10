@@ -2,21 +2,40 @@
 import {ofType, combineEpics} from 'redux-observable';
 import {ACTIONS} from 'redux-api-call';
 import {map, filter, tap} from 'rxjs/operators';
-import {addUsers, addUser, editUser} from './UsersAction';
-import {fetchUsersAC} from './state.js';
+import {
+  addUsers,
+  addUser,
+  editUser,
+  noAction,
+  startFetchUsers,
+} from './UsersAction';
 import {getFormValues} from 'redux-form';
+import {cacheOrExecute, setCache} from './apiCache';
 
 let fetchUsersNetworkFails: number = 0;
+
+const startFetchingEpic = action$ =>
+  action$.pipe(
+    ofType('START_FETCHING'),
+    map(async action => {
+      console.log(action);
+      const desiredAction = await cacheOrExecute(action.apiName);
+      return desiredAction;
+    }),
+  );
 
 const fetchUsersCompleteEpic = action$ =>
   action$.pipe(
     ofType(ACTIONS.COMPLETE),
     filter(action => action.payload.name === 'FETCH_USERS'),
+    tap(action => {
+      fetchUsersNetworkFails = 0;
+      setCache(action);
+    }),
     map(({payload}) => {
       const fetchedUsers = payload.json.results || [];
       return addUsers(fetchedUsers);
     }),
-    tap(() => (fetchUsersNetworkFails = 0)),
   );
 
 const fetchUsersNetworkFailureEpic = action$ =>
@@ -29,10 +48,10 @@ const fetchUsersNetworkFailureEpic = action$ =>
     ),
     map(res => {
       if (++fetchUsersNetworkFails < 3) {
-        return fetchUsersAC();
+        return startFetchUsers();
       } else {
         fetchUsersNetworkFails = 0;
-        return {type: 'NO_ACTION'};
+        return noAction();
       }
     }),
   );
@@ -60,6 +79,7 @@ const usersEpic = combineEpics(
   fetchUsersNetworkFailureEpic,
   pressAddUserEpic,
   pressEditUserEpic,
+  startFetchingEpic,
 );
 
 export default usersEpic;
