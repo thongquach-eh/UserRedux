@@ -52,11 +52,17 @@ export type UserState = {
 };
 
 export type UserAction =
+  | NoAction
   | PressAddUserAction
   | AddUserAction
   | PressEditUserAction
   | EditUserAction
-  | AddUsersAction;
+  | AddUsersAction
+  | StartFetchingAction;
+
+export type NoAction = {
+  type: 'NO_ACTION',
+};
 
 export type PressAddUserAction = {
   type: 'PRESS_ADD_USER',
@@ -79,6 +85,11 @@ export type PressEditUserAction = {
 export type EditUserAction = {
   type: 'EDIT_USER',
   editedUser: User,
+};
+
+export type StartFetchingAction = {
+  type: 'START_FETCHING',
+  apiName: string,
 };
 
 export type UserDispatch = (action: UserAction) => void;
