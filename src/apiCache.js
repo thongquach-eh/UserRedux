@@ -11,8 +11,8 @@ export const cacheOrExecute = async (apiName: string): Promise<UserAction> => {
 
   switch (apiName) {
     case 'FETCH_USERS':
-      if (cachedAction) {
-        return addUsers(cachedAction.data.results);
+      if (cachedAction && typeof cachedAction === 'object') {
+        return addUsers(cachedAction.payload.json.results);
       } else {
         return fetchUsersAC();
       }
@@ -33,7 +33,7 @@ const isCacheTimeout = (cachedDate: string): boolean => {
 };
 
 const getCache = async (apiName: string): boolean | Object => {
-  const cachedAction = await AsyncStorage.getItem(apiName);
+  const cachedAction = JSON.parse(await AsyncStorage.getItem(apiName));
 
   if (cachedAction == null || isCacheTimeout(cachedAction.meta.date)) {
     return false;
