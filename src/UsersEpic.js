@@ -74,11 +74,11 @@ const pressEditUserEpic = (action$, state$) =>
   );
 
 const usersEpic = combineEpics(
+  startFetchingEpic,
   fetchUsersCompleteEpic,
   fetchUsersNetworkFailureEpic,
   pressAddUserEpic,
   pressEditUserEpic,
-  startFetchingEpic,
 );
 
 export default usersEpic;

@@ -4,7 +4,7 @@ import {fetchUsersAC} from './state';
 import type {UserAction} from './types';
 import {AsyncStorage} from 'react-native';
 
-const CACHE_TIMEOUT_PERIOD = 60; // in seconds
+const CACHE_TIMEOUT = 60; // in seconds
 
 export const cacheOrExecute = async (apiName: string): Promise<UserAction> => {
   const cachedAction = await getCache(apiName);
@@ -26,16 +26,16 @@ export const setCache = (action: any): void => {
   AsyncStorage.setItem(action.payload.name, JSON.stringify(action));
 };
 
-const isCacheTimeout = (cachedDate: string): boolean => {
+const isCacheExpired = (cachedDate: string): boolean => {
   const storedTime =
     (new Date().getTime() - new Date(cachedDate).getTime()) / 1000;
-  return storedTime > CACHE_TIMEOUT_PERIOD;
+  return storedTime > CACHE_TIMEOUT;
 };
 
 const getCache = async (apiName: string): boolean | Object => {
   const cachedAction = JSON.parse(await AsyncStorage.getItem(apiName));
 
-  if (cachedAction == null || isCacheTimeout(cachedAction.meta.date)) {
+  if (cachedAction == null || isCacheExpired(cachedAction.meta.date)) {
     return false;
   } else {
     return cachedAction;
