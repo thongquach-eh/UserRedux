@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen = ({navigation, route}: HomeScreenProps): React.Node => {
+  console.log(navigation);
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Welcome to Mobile Training</Text>
