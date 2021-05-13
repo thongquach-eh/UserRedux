@@ -56,7 +56,7 @@ const UserListScreen = ({
   if (isFetching) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" testID="loading" />
       </View>
     );
   } else if (fetchUsersError) {

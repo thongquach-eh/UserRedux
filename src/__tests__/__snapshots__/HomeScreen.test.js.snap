@@ -1,10 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Home screen snapshot test 1`] = `
+exports[`Home screen get errors should render error 1`] = `
 <View
   style={
     Object {
-      "alignItems": "center",
       "flex": 1,
       "justifyContent": "center",
     }
@@ -13,12 +12,13 @@ exports[`Home screen snapshot test 1`] = `
   <Text
     style={
       Object {
-        "fontSize": 50,
+        "fontSize": 16,
         "textAlign": "center",
       }
     }
   >
-    Welcome to Mobile Training
+    An error occurred: 
+    Something went wrong!
   </Text>
   <View
     accessibilityRole="button"
@@ -57,7 +57,7 @@ exports[`Home screen snapshot test 1`] = `
           ]
         }
       >
-        Go to User List
+        Retry
       </Text>
     </View>
   </View>
