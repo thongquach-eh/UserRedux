@@ -8,10 +8,8 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import type {StackNavigationProp} from '@react-navigation/stack';
-import type {RootStackParamList, User, UserDispatch} from '../types';
+import type {User} from '../types';
 import UserItem from './UserItem';
-import {startFetchUsers} from '../UsersAction';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,46 +23,40 @@ const styles = StyleSheet.create({
 });
 
 type UserListComponentProps = {
-  isFetching: boolean,
-  fetchUsersError: Object,
+  isLoading: boolean,
+  error: Object,
   users: User[],
-  navigation: StackNavigationProp<RootStackParamList, 'UserList'>,
-  dispatch: UserDispatch,
+  onError: () => mixed,
 };
 
-const UserListScreen = ({
-  isFetching,
-  fetchUsersError,
+const UserListComponent = ({
+  isLoading,
+  error,
   users,
-  navigation,
-  dispatch,
+  onError,
 }: UserListComponentProps): React.Node => {
-  if (isFetching) {
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" testID="loadingIcon" />
       </View>
     );
-  } else if (fetchUsersError) {
+  } else if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>
-          An error occurred: {fetchUsersError.message}
-        </Text>
-        <Button onPress={() => dispatch(startFetchUsers())} title="Retry" />
+        <Text style={styles.errorText}>An error occurred: {error.message}</Text>
+        <Button onPress={onError} title="Retry" />
       </View>
     );
   } else {
     return (
       <FlatList
         data={users}
-        renderItem={({item: user}) => (
-          <UserItem user={user} navigation={navigation} />
-        )}
+        renderItem={({item: user}) => <UserItem user={user} />}
         keyExtractor={user => user.id}
       />
     );
   }
 };
 
-export default UserListScreen;
+export default UserListComponent;

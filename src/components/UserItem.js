@@ -5,7 +5,7 @@ import FullName from './FullName';
 import Location from './Location';
 import BirthDate from './BirthDate';
 import type {User} from '../types.js';
-import type {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   userContainer: {
@@ -25,47 +25,45 @@ const styles = StyleSheet.create({
   },
 });
 
-const UserItem = ({
-  user,
-  navigation,
-}: {
-  user: User,
-  navigation: StackNavigationProp<any, any>,
-}): React.Node => (
-  <TouchableHighlight
-    activeOpacity={0.6}
-    underlayColor="#DDDDDD"
-    onPress={() =>
-      navigation.navigate('UserDetails', {
-        id: user.id,
-      })
-    }>
-    <View style={styles.userContainer}>
-      <Image
-        style={styles.avatar}
-        source={{
-          uri: user.picture?.medium,
-        }}
-      />
-      <View style={styles.userInfo}>
-        <FullName
-          title={user.name.title}
-          first={user.name.first}
-          last={user.name.last}
+const UserItem = ({user}: {user: User}): React.Node => {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableHighlight
+      activeOpacity={0.6}
+      underlayColor="#DDDDDD"
+      onPress={() =>
+        navigation.navigate('UserDetails', {
+          id: user.id,
+        })
+      }>
+      <View style={styles.userContainer}>
+        <Image
+          style={styles.avatar}
+          source={{
+            uri: user.picture?.medium,
+          }}
         />
-        {user.location && (
-          <Location
-            streetName={user.location.street?.name}
-            streetNum={user.location.street?.number}
-            city={user.location.city}
-            state={user.location.state}
-            postcode={user.location.postcode}
-            country={user.location.country}
+        <View style={styles.userInfo}>
+          <FullName
+            title={user.name.title}
+            first={user.name.first}
+            last={user.name.last}
           />
-        )}
-        {user.dob && user.dob.date && <BirthDate date={user.dob.date} />}
+          {user.location && (
+            <Location
+              streetName={user.location.street?.name}
+              streetNum={user.location.street?.number}
+              city={user.location.city}
+              state={user.location.state}
+              postcode={user.location.postcode}
+              country={user.location.country}
+            />
+          )}
+          {user.dob && user.dob.date && <BirthDate date={user.dob.date} />}
+        </View>
       </View>
-    </View>
-  </TouchableHighlight>
-);
+    </TouchableHighlight>
+  );
+};
 export default UserItem;

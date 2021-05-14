@@ -52,7 +52,7 @@ describe('User List component', () => {
 
   it('is getting users', () => {
     const isFetching = true;
-    const component = <UserListComponent isFetching={isFetching} />;
+    const component = <UserListComponent isLoading={isFetching} />;
     const wrapper = render(component);
 
     expect(wrapper.queryAllByTestId('loadingIcon')).toHaveLength(1);
@@ -62,7 +62,7 @@ describe('User List component', () => {
     const fetchUsersError = {
       message: 'Something went wrong!',
     };
-    const component = <UserListComponent fetchUsersError={fetchUsersError} />;
+    const component = <UserListComponent error={fetchUsersError} />;
     const wrapper = render(component);
 
     expect(

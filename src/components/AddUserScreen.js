@@ -16,7 +16,7 @@ import {pressAddUser} from '../UsersAction';
 import type {UserDispatch, RootStackParamList} from '../types.js';
 import StringInput from './StringInput';
 import 'react-native-get-random-values';
-import {validateUser} from './Validations.js';
+import {validateUser} from './Validations';
 import GenderPicker from './GenderPicker';
 import BirthDatePicker from './BirthDatePicker';
 import LocationInput from './LocationInput';

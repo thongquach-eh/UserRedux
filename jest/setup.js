@@ -13,3 +13,15 @@ jest.mock('react-native-reanimated', () => {
 
 // As of react-native@0.64.X file has moved
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: jest.fn(),
+      dispatch: jest.fn(),
+      setOptions: jest.fn(),
+    }),
+  };
+});
