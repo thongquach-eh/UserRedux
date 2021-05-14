@@ -15,6 +15,7 @@ import {startFetchUsers} from '../UsersAction';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
+jest.mock('@react-native-community/datetimepicker');
 
 const configureStore = initialState => {
   const middlewares = [apiMiddleware];
@@ -150,9 +151,7 @@ describe('User List Screen', () => {
     expect(store.getActions()).toContainEqual(startFetchUsers());
   });
 
-  fit('should navigate to Add User Screen', () => {
-    jest.mock('@react-native-community/datetimepicker', () => jest.fn());
-
+  it('should navigate to Add User Screen 1', () => {
     const Stack = createStackNavigator();
     const store = configureStore({});
     const component = (
@@ -174,11 +173,30 @@ describe('User List Screen', () => {
       </Provider>
     );
     const wrapper = render(component);
-
     const addUserBtn = wrapper.getByText('Add');
-    fireEvent.press(addUserBtn);
+    fireEvent.press(addUserBtn); //error happened here due to datetimepicker when rendering addUserScreen
     wrapper.debug();
 
     expect(wrapper.queryAllByText('Add User')).toHaveLength(1);
+  });
+
+  it('should navigate to Add User Screen 2', () => {
+    const store = configureStore({});
+    const navigation = {
+      setOptions: jest.fn(),
+      navigate: jest.fn(),
+    };
+    const component = (
+      <Provider store={store}>
+        <UserListScreen navigation={navigation} />
+      </Provider>
+    );
+    const wrapper = render(component);
+
+    const addUserBtn = wrapper.getByText('Add'); //error happened here because Add button does not exist without Navigation Container
+    const navigateToAddUserScreenSpy = jest.spyOn(navigation, 'navigate');
+    fireEvent.press(addUserBtn);
+
+    expect(navigateToAddUserScreenSpy).toHaveBeenCalledWith('AddUser');
   });
 });
