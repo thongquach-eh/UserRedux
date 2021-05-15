@@ -2,6 +2,7 @@
 import React, {useEffect, useLayoutEffect, useCallback, type Node} from 'react';
 import {Button} from 'react-native';
 import UserListComponent from './UserListComponent';
+import {useNavigation} from '@react-navigation/native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import type {RootState, RootStackParamList, UserDispatch} from '../types';
@@ -14,11 +15,12 @@ type UserListScreenProps = {
   route: RouteProp<RootStackParamList, 'UserList'>,
 };
 
-const UserListScreen = ({navigation, route}: UserListScreenProps): Node => {
+const UserListScreen = ({route}: UserListScreenProps): Node => {
   const users = useSelector((state: RootState) => state.user.users);
   const dispatch = useDispatch<UserDispatch>();
   const isFetching = useSelector<RootState, boolean>(isFetchingUsersSelector);
   const fetchUsersError = useSelector<RootState, any>(fetchUsersErrorSelector);
+  const navigation = useNavigation();
 
   const fetchUsers = useCallback(() => {
     dispatch(startFetchUsers());
