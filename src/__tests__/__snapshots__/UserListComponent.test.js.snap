@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User List component should show users 1`] = `
+<RCTScrollView
+  data={
+    Array [
+      Object {
+        "cell": "(626)-097-5896",
+        "dob": Object {
+          "age": 74,
+          "date": "1947-06-30T21:13:54.078Z",
+        },
+        "email": "emre.abaci@example.com",
+        "gender": "male",
+        "id": "412948129",
+        "location": Object {
+          "city": "Hatay",
+          "country": "Turkey",
+          "postcode": 34478,
+          "state": "Elazığ",
+          "street": Object {
+            "name": "Vatan Cd",
+            "number": 7028,
+          },
+        },
+        "name": Object {
+          "first": "Emre",
+          "last": "Abacı",
+          "title": "Mr",
+        },
+        "phone": "(439)-741-1246",
+        "picture": Object {
+          "large": "https://randomuser.me/api/portraits/men/39.jpg",
+          "medium": "https://randomuser.me/api/portraits/med/men/39.jpg",
+          "thumbnail": "https://randomuser.me/api/portraits/thumb/men/39.jpg",
+        },
+      },
+    ]
+  }
+  disableVirtualization={false}
+  getItem={[Function]}
+  getItemCount={[Function]}
+  horizontal={false}
+  initialNumToRender={10}
+  keyExtractor={[Function]}
+  maxToRenderPerBatch={10}
+  onContentSizeChange={[Function]}
+  onEndReachedThreshold={2}
+  onLayout={[Function]}
+  onMomentumScrollEnd={[Function]}
+  onScroll={[Function]}
+  onScrollBeginDrag={[Function]}
+  onScrollEndDrag={[Function]}
+  removeClippedSubviews={false}
+  renderItem={[Function]}
+  scrollEventThrottle={50}
+  stickyHeaderIndices={Array []}
+  updateCellsBatchingPeriod={50}
+  viewabilityConfigCallbackPairs={Array []}
+  windowSize={21}
+>
+  <View>
+    <View
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "backgroundColor": "lightblue",
+              "flexDirection": "row",
+              "marginHorizontal": 8,
+              "marginVertical": 8,
+              "padding": 12,
+            }
+          }
+        >
+          <Image
+            source={
+              Object {
+                "uri": "https://randomuser.me/api/portraits/med/men/39.jpg",
+              }
+            }
+            style={
+              Object {
+                "height": 72,
+                "width": 72,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "flexShrink": 1,
+                "marginHorizontal": 8,
+              }
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "fontSize": 18,
+                  "fontWeight": "500",
+                }
+              }
+            >
+              Mr. 
+              Emre
+               
+              Abacı
+            </Text>
+            <Text>
+              Vatan Cd
+               
+              7028
+              , 
+              Hatay
+               
+              Elazığ
+              , 
+              34478
+               
+              Turkey
+            </Text>
+            <Text>
+              July 1, 1947
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;

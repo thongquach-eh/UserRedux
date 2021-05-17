@@ -1,51 +1,36 @@
 // @flow
-import * as React from 'react';
-import {
-  FlatList,
-  Button,
-  ActivityIndicator,
-  View,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import React, {useEffect, useLayoutEffect, useCallback, type Node} from 'react';
+import {Button} from 'react-native';
+import UserListComponent from './UserListComponent';
+import {useNavigation} from '@react-navigation/native';
 import type {RouteProp} from '@react-navigation/native';
 import type {StackNavigationProp} from '@react-navigation/stack';
 import type {RootState, RootStackParamList, UserDispatch} from '../types';
 import {useSelector, useDispatch} from 'react-redux';
-import UserItem from './UserItem';
 import {isFetchingUsersSelector, fetchUsersErrorSelector} from '../state';
 import {startFetchUsers} from '../UsersAction';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  errorText: {
-    textAlign: 'center',
-    fontSize: 16,
-  },
-});
 
 type UserListScreenProps = {
   navigation: StackNavigationProp<RootStackParamList, 'UserList'>,
   route: RouteProp<RootStackParamList, 'UserList'>,
 };
 
-const UserListScreen = ({
-  navigation,
-  route,
-}: UserListScreenProps): React.Node => {
+const UserListScreen = ({route}: UserListScreenProps): Node => {
   const users = useSelector((state: RootState) => state.user.users);
   const dispatch = useDispatch<UserDispatch>();
   const isFetching = useSelector<RootState, boolean>(isFetchingUsersSelector);
   const fetchUsersError = useSelector<RootState, any>(fetchUsersErrorSelector);
+  const navigation = useNavigation();
 
-  React.useEffect(() => {
+  const fetchUsers = useCallback(() => {
     dispatch(startFetchUsers());
   }, [dispatch]);
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button title="Add" onPress={() => navigation.navigate('AddUser')} />
@@ -53,32 +38,14 @@ const UserListScreen = ({
     });
   });
 
-  if (isFetching) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  } else if (fetchUsersError) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>
-          An error occurred: {fetchUsersError.message}
-        </Text>
-        <Button onPress={() => dispatch(startFetchUsers())} title="Retry" />
-      </View>
-    );
-  } else {
-    return (
-      <FlatList
-        data={users}
-        renderItem={({item: user}) => (
-          <UserItem user={user} navigation={navigation} />
-        )}
-        keyExtractor={user => user.id}
-      />
-    );
-  }
+  return (
+    <UserListComponent
+      isLoading={isFetching}
+      error={fetchUsersError}
+      users={users}
+      onError={fetchUsers}
+    />
+  );
 };
 
 export default UserListScreen;

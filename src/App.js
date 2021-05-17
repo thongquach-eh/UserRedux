@@ -26,7 +26,7 @@ const rootEpic = combineEpics(usersEpic);
 const epicMiddleware = createEpicMiddleware();
 const middlewares = [apiMiddleware, epicMiddleware];
 
-if (__DEV__) {
+if (__DEV__ && !process.env.JEST_WORKER_ID) {
   middlewares.push(createDebugger());
 }
 
