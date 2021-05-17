@@ -2,7 +2,6 @@ import 'react-native';
 import * as React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
 import UserListScreen from '../components/UserListScreen';
-import AddUserScreen from '../components/AddUserScreen';
 import {Provider} from 'react-redux';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import usersReducer from '../UsersReducer';
@@ -14,8 +13,23 @@ import {reducer as formReducer} from 'redux-form';
 import {startFetchUsers} from '../UsersAction';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import DateTimePicker from '@react-native-community/datetimepicker';
-jest.mock('@react-native-community/datetimepicker');
+
+const mockedNavigate = jest.fn();
+
+jest.mock('@react-navigation/native', () => {
+  return {
+    ...jest.requireActual('@react-navigation/native'),
+    useNavigation: () => {
+      const navigation = jest
+        .requireActual('@react-navigation/native')
+        .useNavigation();
+      return {
+        ...navigation,
+        navigate: mockedNavigate,
+      };
+    },
+  };
+});
 
 const configureStore = initialState => {
   const middlewares = [apiMiddleware];
@@ -44,14 +58,20 @@ const configureStore = initialState => {
 };
 
 const renderComponent = initialState => {
+  const Stack = createStackNavigator();
+
   const store = configureStore(initialState);
   const component = (
     <Provider store={store}>
-      <UserListScreen
-        navigation={{
-          setOptions: jest.fn(),
-        }}
-      />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="UserList"
+            component={UserListScreen}
+            options={{title: 'Users'}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
   const wrapper = render(component);
@@ -151,7 +171,7 @@ describe('User List Screen', () => {
     expect(store.getActions()).toContainEqual(startFetchUsers());
   });
 
-  it('should navigate to Add User Screen 1', () => {
+  it('should navigate to Add User Screen', () => {
     const Stack = createStackNavigator();
     const store = configureStore({});
     const component = (
@@ -163,40 +183,15 @@ describe('User List Screen', () => {
               component={UserListScreen}
               options={{title: 'Users'}}
             />
-            <Stack.Screen
-              name="AddUser"
-              component={AddUserScreen}
-              options={{title: 'Add User'}}
-            />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     );
     const wrapper = render(component);
+
     const addUserBtn = wrapper.getByText('Add');
-    fireEvent.press(addUserBtn); //error happened here due to datetimepicker when rendering addUserScreen
-    wrapper.debug();
-
-    expect(wrapper.queryAllByText('Add User')).toHaveLength(1);
-  });
-
-  it('should navigate to Add User Screen 2', () => {
-    const store = configureStore({});
-    const navigation = {
-      setOptions: jest.fn(),
-      navigate: jest.fn(),
-    };
-    const component = (
-      <Provider store={store}>
-        <UserListScreen navigation={navigation} />
-      </Provider>
-    );
-    const wrapper = render(component);
-
-    const addUserBtn = wrapper.getByText('Add'); //error happened here because Add button does not exist without Navigation Container
-    const navigateToAddUserScreenSpy = jest.spyOn(navigation, 'navigate');
     fireEvent.press(addUserBtn);
 
-    expect(navigateToAddUserScreenSpy).toHaveBeenCalledWith('AddUser');
+    expect(mockedNavigate).toHaveBeenCalledWith('AddUser');
   });
 });
